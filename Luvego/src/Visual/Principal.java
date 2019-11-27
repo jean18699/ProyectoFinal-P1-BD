@@ -20,6 +20,7 @@ import Logico.Disegnador;
 import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Jefe;
+import Logico.MySQLConexion;
 import Logico.Planificador;
 import Logico.Programador;
 import Logico.Proyecto;
@@ -78,9 +79,12 @@ public class Principal extends JFrame {
 	private JTextField txtFecha;
 	private JTextField txtFechaEntrega;
 
-	/**
-	 * Launch the application.
-	 */
+
+	//BASE DE DATOS
+	MySQLConexion conexion = new MySQLConexion("Luvego");
+	java.sql.Connection conn = conexion.getConexion();
+	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -215,7 +219,8 @@ public class Principal extends JFrame {
 		JMenuItem mntmGestionar = new JMenuItem("Gestionar");
 		mntmGestionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListarEmpleados list = new ListarEmpleados();
+				
+				ListarEmpleados list = new ListarEmpleados(conn);
 				list.setLocationRelativeTo(null);
 				list.setModal(true);
 				list.setVisible(true);

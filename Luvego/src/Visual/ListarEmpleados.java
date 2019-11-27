@@ -74,7 +74,7 @@ public class ListarEmpleados extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ListarEmpleados() {
+	public ListarEmpleados(java.sql.Connection conn) {
 		setType(Type.UTILITY);
 		setResizable(false);
 		setTitle("Registro de empleados");
@@ -93,6 +93,9 @@ public class ListarEmpleados extends JDialog {
 		contentPanel.add(scrollPane);
 		{
 			table = new JTable();
+			DefaultTableModel modelo = new DefaultTableModel();
+
+			
 			table.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(java.awt.event.MouseEvent e) {
