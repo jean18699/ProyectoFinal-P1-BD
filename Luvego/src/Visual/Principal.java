@@ -220,12 +220,12 @@ public class Principal extends JFrame {
 		mntmGestionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				/*ListarEmpleados list = new ListarEmpleados(conn);
+				ListarEmpleados list = new ListarEmpleados();
 				list.setLocationRelativeTo(null);
 				list.setModal(true);
 				list.setVisible(true);
 				cargarProyectos();
-				repaint();*/
+				repaint();
 			}
 		});
 		mnEmpleados.add(mntmGestionar);

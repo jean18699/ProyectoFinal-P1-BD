@@ -74,7 +74,7 @@ public class ListarEmpleados extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ListarEmpleados(java.sql.Connection conn) {
+	public ListarEmpleados() {
 		setType(Type.UTILITY);
 		setResizable(false);
 		setTitle("Registro de empleados");
