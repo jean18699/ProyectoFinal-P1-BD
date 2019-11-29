@@ -81,8 +81,8 @@ public class Principal extends JFrame {
 
 
 	//BASE DE DATOS
-	MySQLConexion conexion = new MySQLConexion("Luvego");
-	java.sql.Connection conn = conexion.getConexion();
+	/*MySQLConexion conexion = new MySQLConexion("Luvego");
+	java.sql.Connection conn = conexion.getConexion();*/
 	
 	
 	public static void main(String[] args) {
@@ -220,12 +220,12 @@ public class Principal extends JFrame {
 		mntmGestionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ListarEmpleados list = new ListarEmpleados(conn);
+				/*ListarEmpleados list = new ListarEmpleados(conn);
 				list.setLocationRelativeTo(null);
 				list.setModal(true);
 				list.setVisible(true);
 				cargarProyectos();
-				repaint();
+				repaint();*/
 			}
 		});
 		mnEmpleados.add(mntmGestionar);
