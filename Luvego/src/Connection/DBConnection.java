@@ -40,9 +40,15 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
-    public void agregarProyecto(String nombre, String estadoProyecto, String lenguaje, String atrasado, String especialidad,
+    public void agregarProyecto(String nombreProyecto, String estadoProyecto, String lenguaje, String atrasado, String especialidad,
     		String cedulaCliente, String fechaEntrega, String precioFinal, String estadoContrato,
-    		String codigoJefe, String codigoPlanificador, String codigoProgramador1, )
+    		String codigoJefe, String codigoPlanificador, String codigoProgramadorUno, String codigoProgramadorDos, String codigoAdicional) throws SQLException {
+    	
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProyectoContrato]('"+nombreProyecto+"','"+estadoProyecto+"','"+lenguaje+"','"+atrasado+"','"+especialidad+"','"+
+    																						cedulaCliente+"','"+fechaEntrega+"','"+precioFinal+"','"+estadoContrato+"','"+
+																							codigoJefe+"','"+codigoPlanificador+"','"+codigoProgramadorUno+"','"+codigoProgramadorDos+"','"+codigoAdicional+"')}");
+    	cs.executeUpdate();
+    }
 
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
