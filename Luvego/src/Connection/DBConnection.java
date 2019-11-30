@@ -17,7 +17,7 @@ public class DBConnection {
         Connection conn = DriverManager.getConnection("jdbc:sqlserver://ojosdelacara.database.windows.net:1433;database=Luvego;user=JeanGeorge@ojosdelacara;password=Luvego12*45JeanKGeorge;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
 
         Statement sta = conn.createStatement();
-		String Sql = "SELECT * FROM TestTable";
+		String Sql = "SELECT * FROM Persona";
 		ResultSet rs = sta.executeQuery(Sql);
 		while (rs.next()) {
 			System.out.println(rs.getString(1) + " " + rs.getString(2));

@@ -20,7 +20,6 @@ import Logico.Disegnador;
 import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Jefe;
-import Logico.MySQLConexion;
 import Logico.Planificador;
 import Logico.Programador;
 import Logico.Proyecto;
