@@ -38,6 +38,11 @@ public class Empresa implements Serializable {
 	private String ultimoNombreProyecto;
 	private Date ultimoFechaSolicitud;
 	private Date ultimoFechaEntrega;
+	public int totalEmpleados;
+	private int totalDisegnadores;
+	private int totalProgramadores;
+	private int totalJefes;
+	private int totalPlanificadores;
 	
 
 	private Empresa() {
@@ -644,6 +649,15 @@ public class Empresa implements Serializable {
 		this.perdidasTotales = perdidasTotales;
 	}
 
+	public void setTotalEmpleados(int total)
+	{
+		totalEmpleados = total;
+	}
+	public int getTotalEmpleados()
+	{
+		return totalEmpleados;
+	}
+	
 	public void setUltimasPerdida(float ultimasPerdida) {
 		UltimasPerdida = ultimasPerdida;
 	}
@@ -790,6 +804,46 @@ public class Empresa implements Serializable {
 		return verdad;
 	}
 
+	public void setTotalDisegnadores(int total) {
+		// TODO Auto-generated method stub
+		totalDisegnadores = total;
+	}
+
+	public int getTotalDisegnadores()
+	{
+		return totalDisegnadores;
+	}
+	
+	public void setTotalProgramadores(int total) {
+		// TODO Auto-generated method stub
+		totalProgramadores = total;
+	}
+
+	public int getTotalProgramadores()
+	{
+		return totalProgramadores;
+	}
+	
+	public void setTotalJefes(int total) {
+		// TODO Auto-generated method stub
+		totalJefes = total;
+	}
+
+	public int getTotalJefes()
+	{
+		return totalJefes;
+	}
+	
+	public void setTotalPlanificadores(int total) {
+		// TODO Auto-generated method stub
+		totalPlanificadores = total;
+	}
+
+	public int getTotalPlanificadores()
+	{
+		return totalPlanificadores;
+	}
+	
 	/*
 	 * public boolean confirmLogin(String Id, String Contrasena) { boolean login =
 	 * false;

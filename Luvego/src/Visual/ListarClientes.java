@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.ScrollPane;
 import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import com.sun.glass.events.MouseEvent;
 //import com.sun.org.apache.xpath.internal.operations.String;
 
+import Connection.DBConnection;
 import Logico.Cliente;
 import Logico.ColorTabla;
 import Logico.Empleado;
@@ -369,22 +371,11 @@ public class ListarClientes extends JDialog {
 	}*/
 
 	private void cargarClientes() {
-		int i;
-		modelClientes.setColumnIdentifiers(new String[] {"Cedula", "Nombre", "Proyectos activos", "Proyectos totales"});
-		modelClientes.setRowCount(0);
-		fila = new Object[modelClientes.getColumnCount()];
-
-		for(i = 0; i < Empresa.getInstance().getClientes().size(); i++) {
-			if(Empresa.getInstance().getClientes().get(i).getNombre().contains(txtNombre.getText()) && Empresa.getInstance().getClientes().get(i).getCedula().contains(txtCedula.getText())) {
-				System.out.println(Empresa.getInstance().getClientes().get(i).getId());
-				System.out.println(txtCedula.getText());
-				fila[0] = Empresa.getInstance().getClientes().get(i).getCedula();
-				fila[1] = Empresa.getInstance().getClientes().get(i).getNombre();
-				fila[2] = Empresa.getInstance().getClientes().get(i).getContratos().size();
-				fila[3] = Empresa.getInstance().getClientes().get(i).getTotalContratos();
-				//fila[4] = Empresa.getInstance().getClientes().get(i).getTotalContratos();
-				modelClientes.addRow(fila);
-			}
+		try {
+			table.setModel(DBConnection.getInstance().mostrarClientes());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

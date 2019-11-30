@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -24,6 +25,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import com.sun.glass.events.MouseEvent;
 
+import Connection.DBConnection;
 import Logico.Disegnador;
 import Logico.Empresa;
 import Logico.Jefe;
@@ -93,7 +95,7 @@ public class ListarEmpleados extends JDialog {
 		contentPanel.add(scrollPane);
 		{
 			table = new JTable();
-			DefaultTableModel modelo = new DefaultTableModel();
+			//DefaultTableModel modelo = new DefaultTableModel();
 
 			
 			table.addMouseListener(new MouseAdapter() {
@@ -111,10 +113,18 @@ public class ListarEmpleados extends JDialog {
 			table.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			model = new DefaultTableModel();
-			String[] columnnames = { "Código", "Nombre", "Apellidos", "Posición", "Proyectos activos", "Evaluacion" };
-			model.setColumnIdentifiers(columnnames);
-			table.setModel(model);
+			//model = new DefaultTableModel();
+			//String[] columnnames = { "Código", "Nombre", "Apellidos", "Posición", "Proyectos activos", "Evaluacion" };
+			//model.setColumnIdentifiers(columnnames);
+			
+			try {
+				
+				table.setModel(DBConnection.getInstance().mostrarEmpleados());//AQUI LE PONEMOS LA FUNCION QUE RETORNA EL MODELO EN LA CLASE DBCONNECTION
+				
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
 			scrollPane.setViewportView(table);
 			{
 				panel = new JPanel();
@@ -329,7 +339,8 @@ public class ListarEmpleados extends JDialog {
 						txtTotalEmpleados.setEditable(false);
 						panel_5.add(txtTotalEmpleados);
 						txtTotalEmpleados.setColumns(10);
-						txtTotalEmpleados.setText(Integer.toString(Empresa.getInstance().getEmpleados().size()));
+						
+						txtTotalEmpleados.setText(Integer.toString(Empresa.getInstance().getTotalEmpleados()));
 					}
 				}
 
@@ -360,9 +371,9 @@ public class ListarEmpleados extends JDialog {
 
 	private void cargarEmpleados() {
 
-		model.setRowCount(0);
-		fila = new Object[model.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
+		//model.setRowCount(0);
+		//fila = new Object[model.getColumnCount()];
+	/*	for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
 
 				fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
 				fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
@@ -384,7 +395,7 @@ public class ListarEmpleados extends JDialog {
 				model.addRow(fila);
 			
 		}
-
+*/
 	}
 
 	/*

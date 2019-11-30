@@ -15,6 +15,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
+import Connection.DBConnection;
 import Logico.ColorTabla;
 import Logico.Disegnador;
 import Logico.Empleado;
@@ -38,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -326,7 +328,12 @@ public class Principal extends JFrame {
 
 		tablaProyectos = new JTable();
 		scrollPane.setViewportView(tablaProyectos);
-		tablaProyectos.setModel(model);
+		try {
+			tablaProyectos.setModel(DBConnection.getInstance().mostrarProyectosVentanaPrincipal());
+		} catch (ClassNotFoundException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		JButton btnGestionar = new JButton("Gestionar");
 		btnGestionar.setBounds(20, 159, 89, 23);
@@ -337,7 +344,7 @@ public class Principal extends JFrame {
 		txtCantidadProyectos.setBounds(379, 175, 86, 20);
 		panel.add(txtCantidadProyectos);
 		txtCantidadProyectos.setColumns(10);
-		txtCantidadProyectos.setText(Integer.toString(Empresa.getInstance().getProyectos().size()));
+		txtCantidadProyectos.setText(Integer.toString(Empresa.getInstance().getTotalProyectos()));
 
 		JLabel lblTotalDeProyectos = new JLabel("Total de proyectos:");
 		lblTotalDeProyectos.setForeground(new Color(255, 255, 255));

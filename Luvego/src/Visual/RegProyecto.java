@@ -33,6 +33,7 @@ import Logico.Programador;
 import Logico.Proyecto;
 
 import java.awt.event.MouseMotionAdapter;
+import java.sql.SQLException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import javax.swing.JScrollPane;
@@ -43,6 +44,9 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import Connection.DBConnection;
+
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Color;
@@ -835,152 +839,51 @@ public class RegProyecto extends JDialog {
 	}
 
 	private void cargarJefes() {
-		model.setRowCount(0);
-		fila = new Object[model.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-			if (Empresa.getInstance().getEmpleados().get(i) instanceof Jefe
-					&& !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtJefe.getText())
-					&& !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdAdicional.getText())
-					&& Empresa.getInstance().getEmpleados().get(i).getCondicion().equalsIgnoreCase("Disponible")) {
-				fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
-				fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
-				fila[2] = Empresa.getInstance().getEmpleados().get(i).getCargo();
-				fila[3] = Empresa.getInstance().getEmpleados().get(i).getSalarioHora();
-				fila[4] = Empresa.getInstance().getEmpleados().get(i).getEvaluacionAnual();
-
-				model.addRow(fila);
-			}
+		
+		try {
+			table.setModel(DBConnection.getInstance().mostrarJefes());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		table.getColumnModel().getColumn(0).setMinWidth(100);
-		// table.getColumnModel().getColumn(0).setMaxWidth(100);
 	}
 
-	/*private void cargarProgramadores() {
-		model.setRowCount(0);
-		fila = new Object[model.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-			if (Empresa.getInstance().getEmpleados().get(i) instanceof Programador
-					&& !Empresa.getInstance().getEmpleados().get(i).getId()
-							.equalsIgnoreCase(txtIdProgramador1.getText())
-					&& !Empresa.getInstance().getEmpleados().get(i).getId()
-							.equalsIgnoreCase(txtIdProgramador2.getText())
-					&& !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdAdicional.getText())
-					&& Empresa.getInstance().getEmpleados().get(i).getCondicion().equalsIgnoreCase("Disponible")) {
-				fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
-				fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
-				fila[2] = Empresa.getInstance().getEmpleados().get(i).getCargo();
-				fila[3] = Empresa.getInstance().getEmpleados().get(i).getSalarioHora();
-				fila[4] = Empresa.getInstance().getEmpleados().get(i).getEvaluacionAnual();
-				model.addRow(fila);
-			}
-		}
-
-		table.getColumnModel().getColumn(0).setMinWidth(100);
-		// table.getColumnModel().getColumn(0).setMaxWidth(100);
-
-	}*/
-
 	private void cargarProgramadoresEspecializados() {
-		model.setRowCount(0);
-		fila = new Object[model.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-			if (Empresa.getInstance().getEmpleados().get(i) instanceof Programador && !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdProgramador1.getText()) && !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdProgramador2.getText()) && !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdAdicional.getText()) && Empresa.getInstance().getEmpleados().get(i).getCondicion().equalsIgnoreCase("Disponible")) {
-				
-				
-				/*for (int j = 0; j < ((Programador) Empresa.getInstance().getEmpleados().get(i)).getEspecialidades()
-						.size(); j++) {
-					if (((Programador) Empresa.getInstance().getEmpleados().get(i)).getEspecialidades().get(j)
-							.equalsIgnoreCase(cmbLenguaje.getSelectedItem().toString())) {
-						
-						System.out.println(Arrays.toString(((Programador) Empresa.getInstance().getEmpleados().get(i)).getEspecialidades().toArray()));
-						System.out.println("\n");
 
-						fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
-						fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
-						fila[2] = Empresa.getInstance().getEmpleados().get(i).getCargo();
-						fila[3] = Empresa.getInstance().getEmpleados().get(i).getSalarioHora();
-						fila[4] = Empresa.getInstance().getEmpleados().get(i).getEvaluacionAnual();
-						model.addRow(fila);
-					}
-					
-				}*/
-				if(((Programador) Empresa.getInstance().getEmpleados().get(i)).getEspecialidades().contains(cmbLenguaje.getSelectedItem())) {
-					/*System.out.println(Arrays.toString(((Programador) Empresa.getInstance().getEmpleados().get(i)).getEspecialidades().toArray()));
-					System.out.println("\n");*/
-					fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
-					fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
-					fila[2] = Empresa.getInstance().getEmpleados().get(i).getCargo();
-					fila[3] = Empresa.getInstance().getEmpleados().get(i).getSalarioHora();
-					fila[4] = Empresa.getInstance().getEmpleados().get(i).getEvaluacionAnual();
-					model.addRow(fila);
-				}
-			}
+		try {
+			table.setModel(DBConnection.getInstance().mostrarProgramadorEspecializado(cmbLenguaje.getSelectedItem().toString()));
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		table.getColumnModel().getColumn(0).setMinWidth(100);
-		// table.getColumnModel().getColumn(0).setMaxWidth(100);
-
+		
 	}
 
 	private void cargarPlanificadores() {
-		model.setRowCount(0);
-		fila = new Object[model.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-			if (Empresa.getInstance().getEmpleados().get(i) instanceof Planificador
-					&& !Empresa.getInstance().getEmpleados().get(i).getId()
-							.equalsIgnoreCase(txtIdPlanificador.getText())
-					&& !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdAdicional.getText())
-					&& Empresa.getInstance().getEmpleados().get(i).getCondicion().equalsIgnoreCase("Disponible")) {
-
-				fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
-				fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
-				fila[2] = Empresa.getInstance().getEmpleados().get(i).getCargo();
-				fila[3] = Empresa.getInstance().getEmpleados().get(i).getSalarioHora();
-				fila[4] = Empresa.getInstance().getEmpleados().get(i).getEvaluacionAnual();
-				model.addRow(fila);
-			}
-
-		}
-
-		table.getColumnModel().getColumn(0).setMinWidth(100);
-		// table.getColumnModel().getColumn(0).setMaxWidth(100);
-
+		try {
+			table.setModel(DBConnection.getInstance().mostrarPlanificador());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};	
 	}
 
 	private void cargarDisegnadores() {
-		model.setRowCount(0);
-		fila = new Object[model.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-			if (Empresa.getInstance().getEmpleados().get(i) instanceof Disegnador
-					&& !Empresa.getInstance().getEmpleados().get(i).getId().equalsIgnoreCase(txtIdAdicional.getText())
-					&& Empresa.getInstance().getEmpleados().get(i).getCondicion().equalsIgnoreCase("Disponible")) {
-				fila[0] = Empresa.getInstance().getEmpleados().get(i).getId();
-				fila[1] = Empresa.getInstance().getEmpleados().get(i).getNombre();
-				fila[2] = Empresa.getInstance().getEmpleados().get(i).getCargo();
-				fila[3] = Empresa.getInstance().getEmpleados().get(i).getSalarioHora();
-				fila[4] = Empresa.getInstance().getEmpleados().get(i).getEvaluacionAnual();
-				model.addRow(fila);
-
-			}
-		}
-
-		table.getColumnModel().getColumn(0).setMinWidth(100);
-		// table.getColumnModel().getColumn(0).setMaxWidth(100);
+		
+		try {
+			table.setModel(DBConnection.getInstance().mostrarDisegnador());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
 	}
 
 	private void cargarClientes() {
-		modelClientes.setRowCount(0);
-
-		fila = new Object[modelClientes.getColumnCount()];
-		for (int i = 0; i < Empresa.getInstance().getClientes().size(); i++) {
-			fila[0] = Empresa.getInstance().getClientes().get(i).getCedula();
-			fila[1] = Empresa.getInstance().getClientes().get(i).getNombre();
-			fila[2] = Empresa.getInstance().getClientes().get(i).getDireccion();
-			fila[3] = Empresa.getInstance().getClientes().get(i).getContratos().size();
-			fila[4] = Empresa.getInstance().getClientes().get(i).getTotalContratos();
-
-			modelClientes.addRow(fila);
+		try {
+			tablaClientes.setModel(DBConnection.getInstance().mostrarClientes());
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
