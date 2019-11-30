@@ -35,10 +35,24 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
-    public void agregarJefe(String cedula, String nombre, String apellido, String sexo, String telefono1, String telefono2, String correo, String direccion, String salarioHora) throws SQLException {
-        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarCliente]('"+cedula+"','"+nombre+"','"+apellido+"','"+sexo+"','"+telefono1+"','"+telefono2+"','"+correo+"','"+direccion+"','"+salarioHora+"')}");
+    public void agregarProgramador(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProgramador]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
         cs.executeUpdate();
     }
+    public void agregarDisegnador(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+        cs.executeUpdate();
+    }
+    public void agregarPlanificador(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora,int frecuencia) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarPlanificador]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"','"+frecuencia+"')}");
+        cs.executeUpdate();
+    }
+    
+    public void agregarJefe(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarJefe]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+        cs.executeUpdate();
+    }
+    
     
     public void agregarProyecto(String nombreProyecto, String estadoProyecto, String lenguaje, String atrasado, String especialidad,
     		String cedulaCliente, String fechaEntrega, String precioFinal, String estadoContrato,
@@ -50,6 +64,12 @@ public class DBConnection implements Serializable{
     	cs.executeUpdate();
     }
 
+    public void agregarEspecialidadProgramador(String especialidad) throws SQLException
+    {
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarEspecialidad]('"+especialidad+"')}");
+        cs.executeUpdate();
+    }
+    
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		
