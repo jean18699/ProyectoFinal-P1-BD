@@ -18,12 +18,15 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import org.omg.CosNaming.NamingContextExtPackage.URLStringHelper;
+
+import Connection.DBConnection;
 
 import javax.swing.border.MatteBorder;
 import javax.swing.border.EtchedBorder;
@@ -206,11 +209,13 @@ public class RegCliente extends JDialog {
 					String genero  = null;
 					if(rdbtnHombre.isSelected())
 					{
-						genero = "Hombre";
+						//genero = "Hombre";
+						genero = "H";
 						
 					}else if(rdbtnMujer.isSelected())
 					{
-						genero = "Mujer";
+						//genero = "Mujer";
+						genero = "M";
 					}
 					
 					String cedula = txtCedula.getText();
@@ -267,9 +272,15 @@ public class RegCliente extends JDialog {
 					}
 					
 					else {
-						Cliente cliente = new Cliente(txtCedula.getText(),txtNombre.getText(),txtCorreo.getText(),txtTelefono.getText(),txtTelefono2.getText(),
+						/*Cliente cliente = new Cliente(txtCedula.getText(),txtNombre.getText(),txtCorreo.getText(),txtTelefono.getText(),txtTelefono2.getText(),
 								txtDireccion.getText(),genero);
-						Empresa.getInstance().nuevoCliente(cliente);
+						Empresa.getInstance().nuevoCliente(cliente);*/
+						try {
+							DBConnection.getInstance().agregarCliente(txtCedula.getText(), txtNombre.getText(), txtApellido.getText(), genero, txtTelefono.getText(), txtTelefono2.getText(), txtCorreo.getText(), txtDireccion.getText());
+						} catch (ClassNotFoundException | SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						
 						dispose();
 					}

@@ -109,7 +109,7 @@ public class Principal extends JFrame {
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				try {
+				/*try {
 					FileOutputStream fichero = new FileOutputStream("registro.bin");
 					ObjectOutputStream guardar = new ObjectOutputStream(fichero);
 					guardar.writeObject(Empresa.getInstance().getEmpresa());
@@ -120,14 +120,14 @@ public class Principal extends JFrame {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				System.exit(0);
 
 			}
 		});
 
 		
-		  try { File arch = new File("registro.bin");
+		  /*try { File arch = new File("registro.bin");
 		  
 		  if(!arch.exists()) { arch.createNewFile(); }
 		  
@@ -143,7 +143,7 @@ public class Principal extends JFrame {
 			  e1.printStackTrace(); }
 		  catch
 		  (IOException e1) { e1.printStackTrace(); } catch (ClassNotFoundException e1)
-		   { e1.printStackTrace(); }
+		   { e1.printStackTrace(); }*/
 		 
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
