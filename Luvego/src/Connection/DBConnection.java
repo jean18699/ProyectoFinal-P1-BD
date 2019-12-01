@@ -86,9 +86,9 @@ public class DBConnection implements Serializable{
     	cs.executeUpdate();
     }
 
-    public void agregarEspecialidadProgramador(String especialidad) throws SQLException
+    public void agregarEspecialidadProgramador(String codigo,String especialidad) throws SQLException
     {
-    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarEspecialidad]('"+especialidad+"')}");
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarEspecialidad]('"+codigo+"','"+especialidad+"')}");
         cs.executeUpdate();
     }
     

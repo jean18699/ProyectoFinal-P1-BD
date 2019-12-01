@@ -73,11 +73,11 @@ public class ListarEmpleados extends JDialog {
 	private JPanel panel_4;
 	private JTextField txtBuscarEmpleado;
 	private JLabel lblBuscarEmpleado;
-
-	/**
-	 * Launch the application.
-	 */
-
+	JFreeChart chart;
+	CategoryPlot p;
+	ChartPanel chartPanel;
+	DefaultCategoryDataset dataset;
+	
 	/**
 	 * Create the dialog.
 	 * @throws SQLException 
@@ -217,7 +217,7 @@ public class ListarEmpleados extends JDialog {
 			{
 				
 				
-				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				dataset = new DefaultCategoryDataset();
 				if(Empresa.getInstance().getCantJefes()==0)
 				{
 					dataset.setValue(Empresa.getInstance().getCantJefes(), "Jefe", "Jefes");
@@ -256,15 +256,15 @@ public class ListarEmpleados extends JDialog {
 				
 				// Creando el Grafico
 
-				JFreeChart chart = ChartFactory.createBarChart3D("Cantidad de empleados", "Tipo de empleado", "Cantidad", dataset,
+				chart = ChartFactory.createBarChart3D("Cantidad de empleados", "Tipo de empleado", "Cantidad", dataset,
 						PlotOrientation.VERTICAL, true, true, false);
 				chart.setBackgroundPaint(new Color(112, 128, 144));
 				chart.getTitle().setPaint(Color.black);
 
-				CategoryPlot p = chart.getCategoryPlot();
+				p = chart.getCategoryPlot();
 				p.setRangeGridlinePaint(Color.red);
 
-				ChartPanel chartPanel = new ChartPanel(chart);
+				chartPanel = new ChartPanel(chart);
 				chartPanel.setBounds(0, 35, 792, 266);
 				chartPanel.setLayout(null);
 
@@ -368,6 +368,23 @@ public class ListarEmpleados extends JDialog {
 
 	private void cargarEmpleados() {
 
+		chart = ChartFactory.createBarChart3D("Cantidad de empleados", "Tipo de empleado", "Cantidad", dataset,
+				PlotOrientation.VERTICAL, true, true, false);
+		
+		chart = ChartFactory.createBarChart3D("Cantidad de empleados", "Tipo de empleado", "Cantidad", dataset,
+				PlotOrientation.VERTICAL, true, true, false);
+		chart.setBackgroundPaint(new Color(112, 128, 144));
+		chart.getTitle().setPaint(Color.black);
+
+		p = chart.getCategoryPlot();
+		p.setRangeGridlinePaint(Color.red);
+
+		chartPanel = new ChartPanel(chart);
+		chartPanel.setBounds(0, 35, 792, 266);
+		chartPanel.setLayout(null);
+
+		
+		txtTotalEmpleados.setText(Integer.toString(Empresa.getInstance().getEmpleados().size()));
 		model.setRowCount(0);
 		fila = new Object[model.getColumnCount()];
 		for (int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {

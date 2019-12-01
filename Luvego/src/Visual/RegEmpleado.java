@@ -578,7 +578,7 @@ public class RegEmpleado extends JDialog {
 											DBConnection.getInstance().agregarProgramador(programador.getId(),cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);
 											for(int i = 0; i < especialidades.size();i++)
 											{
-												DBConnection.getInstance().agregarEspecialidadProgramador(especialidades.get(i));	
+												DBConnection.getInstance().agregarEspecialidadProgramador(programador.getId(),especialidades.get(i));	
 											}
 											
 										} catch (ClassNotFoundException | SQLException e1) {
