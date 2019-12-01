@@ -480,37 +480,70 @@ public class DBConnection implements Serializable{
 	   
 	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
 	   CachedRowSet datosContrato = new CachedRowSetImpl();
-	   datosProyecto.populate(rsContrato);
+	   datosContrato.populate(rsContrato);
 	   
 	   ResultSet rsGrupoDeTrabajo = sta.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
 	   CachedRowSet datosGrupoDeTrabajo = new CachedRowSetImpl();
 	   datosGrupoDeTrabajo.populate(rsGrupoDeTrabajo);
 	   
+	   //System.out.printf("un sueldo = %f\n", Empresa.getInstance().getEmpleadoById("JFE-0000002").getSalarioHora());
+	   
+	   /*for(int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
+		   System.out.printf("%s = JFE-0000005: %b\n", Empresa.getInstance().getEmpleados().get(i).getId(), Empresa.getInstance().getEmpleados().get(i).getId().equals("JFE-0000005"));
+	   }*/
+	   
+	   for(int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
+		   System.out.printf("%s con sueldo en empresa\n", Empresa.getInstance().getEmpleados().get(i).getId(), Empresa.getInstance().getEmpleados().get(i).getSalarioHora());
+	   }
+	   System.out.println();
+	   
+	   ArrayList<Empleado> grupoTrabajo = new ArrayList<>();
 	   while(datosProyecto.next()) {
 		   
-		   ArrayList<Empleado> grupoTrabajo = new ArrayList<>();
+		   
 		   
 		   while(datosGrupoDeTrabajo.next()) {
-			   if(datosGrupoDeTrabajo.getString(1) == datosProyecto.getString(1)) {
-				   grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
+			   //System.out.printf("%s\n", datosGrupoDeTrabajo.getString(2));
+			   if(datosGrupoDeTrabajo.getString(1).equals((datosProyecto.getString(1)))) {
+				   
+				   for (Empleado empleado : Empresa.getInstance().getEmpleados()) {
+					    if (empleado.getId().equals(datosGrupoDeTrabajo.getString(2))) {
+					        System.out.printf("%s existe en empresa\n", datosGrupoDeTrabajo.getString(2));
+					    }
+					    else {
+					    	System.out.printf("%s no existe en empresa\n", datosGrupoDeTrabajo.getString(2));
+					    }
+					}
+				   
+				   //grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
+				   //System.out.printf("%s\n", datosGrupoDeTrabajo.getString(2));
 			   }
 		   }
 		   
-		   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));
-		   proyecto.setId(datosProyecto.getString(1)); // ?????????????
+		   
 		   
 		   while (datosContrato.next()) {
-			   			
-			   if(datosContrato.getString(2) == datosProyecto.getString(1)) {
-				   Contrato contrato = new Contrato(proyecto, new SimpleDateFormat("yyy/MM/dd").parse(datosContrato.getString(5)));
+			   
+			   
+			   if(Integer.parseInt(datosContrato.getString(2)) == Integer.parseInt(datosProyecto.getString(1))) {
+				   
+				   //System.out.printf("len GT = %d\n", grupoTrabajo.size());
+				   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));
+				   proyecto.setId(datosProyecto.getString(1)); // ?????????????
+				   //System.out.printf("un sueldo %d\n", proyecto.getGrupoTrabajo().get(0).getSalarioHora());
+				   //System.out.printf("un sueldo = %f", proyecto.getGrupoTrabajo().get(0).getCedula());
+				   
+				   /*Contrato contrato = new Contrato(proyecto, new SimpleDateFormat("yyyy-MM-dd").parse(datosContrato.getString(5)));
+				   contrato.setId(datosContrato.getString(1));
 				   contrato.setCliente(Empresa.getInstance().getClienteById(datosCliente.getString(3)));
 				   proyecto.setContrato(contrato);
-				   Empresa.getInstance().agregarProyecto(proyecto);
+				   Empresa.getInstance().agregarProyecto(proyecto);*/
+				   
 				   break; // ????????????????????/
 			   }
 			
 		   }
-	   }	   
+	   } 
    }
     
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
