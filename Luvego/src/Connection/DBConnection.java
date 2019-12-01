@@ -96,6 +96,11 @@ public class DBConnection implements Serializable{
     }
     
     
+    public void borrarEmpleado(String codigo) throws SQLException
+    {
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spEliminarEmpleado]('"+codigo+"')}");
+        cs.executeUpdate();
+    }
     
   ////////////MOSTRAR ENTIDADES\\\\\\\\\\\\\\\\
     public DefaultTableModel mostrarEmpleados() throws SQLException{

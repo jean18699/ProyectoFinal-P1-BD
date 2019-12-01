@@ -29,11 +29,13 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
 import com.sun.glass.events.MouseEvent;
 
+import Connection.DBConnection;
 import Logico.Disegnador;
+import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Jefe;
 import Logico.Programador;
-
+import Logico.Proyecto;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -43,6 +45,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.ImageIcon;
@@ -141,8 +144,30 @@ public class ListarEmpleados extends JDialog {
 						lblX.addMouseListener(new MouseAdapter() {
 							@Override
 							public void mouseClicked(java.awt.event.MouseEvent e) {
-								Empresa.getInstance().eliminarEmpleado(select);
 								
+								Proyecto proyecto;
+								//Empleado empleado = Empresa.getInstance().getEmpleadoById(select);
+								//int total = Empresa.getInstance().getProyectoById("1").getGrupoTrabajo().size();
+								for(int i = 0; i < Empresa.getInstance().getTotalProyectos(); i++)
+								{
+									proyecto = Empresa.getInstance().getProyectoById(Integer.toString(i));
+									for(int j = 0; j < proyecto.getGrupoTrabajo().size();j++)
+									{
+										if(proyecto.getGrupoTrabajo().get(j).getId().equals(select))
+										{
+											JOptionPane.showMessageDialog(null, "Este empleado actualmente pertenece a un proyecto. No se puede eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+											return;
+										}
+									}
+								}
+								
+								Empresa.getInstance().eliminarEmpleado(select);
+								try {
+									DBConnection.getInstance().borrarEmpleado(select);
+								} catch (ClassNotFoundException | SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 								cargarEmpleados();
 
 							}
@@ -367,22 +392,6 @@ public class ListarEmpleados extends JDialog {
 	}
 
 	private void cargarEmpleados() {
-
-		chart = ChartFactory.createBarChart3D("Cantidad de empleados", "Tipo de empleado", "Cantidad", dataset,
-				PlotOrientation.VERTICAL, true, true, false);
-		
-		chart = ChartFactory.createBarChart3D("Cantidad de empleados", "Tipo de empleado", "Cantidad", dataset,
-				PlotOrientation.VERTICAL, true, true, false);
-		chart.setBackgroundPaint(new Color(112, 128, 144));
-		chart.getTitle().setPaint(Color.black);
-
-		p = chart.getCategoryPlot();
-		p.setRangeGridlinePaint(Color.red);
-
-		chartPanel = new ChartPanel(chart);
-		chartPanel.setBounds(0, 35, 792, 266);
-		chartPanel.setLayout(null);
-
 		
 		txtTotalEmpleados.setText(Integer.toString(Empresa.getInstance().getEmpleados().size()));
 		model.setRowCount(0);
