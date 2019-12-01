@@ -39,7 +39,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -92,8 +91,8 @@ public class Principal extends JFrame {
 				try {
 
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					DBConnection.getInstance().cargarDatos();
 					
+					DBConnection.getInstance().cargarDatos();
 					Principal frame = new Principal();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -329,12 +328,7 @@ public class Principal extends JFrame {
 
 		tablaProyectos = new JTable();
 		scrollPane.setViewportView(tablaProyectos);
-		try {
-			tablaProyectos.setModel(DBConnection.getInstance().mostrarProyectosVentanaPrincipal());
-		} catch (ClassNotFoundException | SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		tablaProyectos.setModel(model);
 
 		JButton btnGestionar = new JButton("Gestionar");
 		btnGestionar.setBounds(20, 159, 89, 23);
