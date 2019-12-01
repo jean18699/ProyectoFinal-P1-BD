@@ -28,6 +28,9 @@ import Logico.Jefe;
 import Logico.Planificador;
 import Logico.Programador;
 import Logico.Proyecto;
+import javafx.print.Collation;
+import java.util.Collection;
+import java.util.Collections;
 
 public class DBConnection implements Serializable{
 	
@@ -428,6 +431,8 @@ public class DBConnection implements Serializable{
    				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
    				datosEmpleado.getString(8),datosEmpleado.getFloat(9),especialidades);
    		   
+   		   System.out.printf("arr: %s\n", datosEmpleado.getString(1));
+   		   empleado.setId(datosEmpleado.getString(1).substring(4));
    		   Empresa.getInstance().nuevoEmpleado(empleado);
    	   }
    	   
@@ -439,6 +444,7 @@ public class DBConnection implements Serializable{
    				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
    				datosEmpleado.getString(8),datosEmpleado.getFloat(9));
    		   
+   		empleado.setId(datosEmpleado.getString(1).substring(4));
    		   Empresa.getInstance().nuevoEmpleado(empleado);
    	   }
    	   
@@ -450,6 +456,7 @@ public class DBConnection implements Serializable{
 				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
 				datosEmpleado.getString(8),datosEmpleado.getFloat(9),datosEmpleado.getInt(10));
 		   
+		   empleado.setId(datosEmpleado.getString(1).substring(4));
 		   Empresa.getInstance().nuevoEmpleado(empleado);
 	   }
 	   
@@ -461,10 +468,13 @@ public class DBConnection implements Serializable{
 				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
 				datosEmpleado.getString(8),datosEmpleado.getFloat(9));
 		   
+		   empleado.setId(datosEmpleado.getString(1).substring(4));
 		   Empresa.getInstance().nuevoEmpleado(empleado);
 	   }
 	   
-	   ResultSet datosCliente = st.executeQuery("select cedula,nombre,correo,telefono1,telefono2,direccion,sexo from infoRegistroCliente");
+	   ResultSet rsCliente = st.executeQuery("select cedula,nombre,correo,telefono1,telefono2,direccion,sexo from infoRegistroCliente");
+	   CachedRowSet datosCliente = new CachedRowSetImpl();
+	   datosCliente.populate(rsCliente);
 	   
 	   while(datosCliente.next())
 	   {
@@ -493,39 +503,56 @@ public class DBConnection implements Serializable{
 	   }*/
 	   
 	   for(int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-		   System.out.printf("%s con sueldo en empresa\n", Empresa.getInstance().getEmpleados().get(i).getId(), Empresa.getInstance().getEmpleados().get(i).getSalarioHora());
+		   System.out.printf("%s\n", Empresa.getInstance().getEmpleados().get(i).getId());
 	   }
 	   System.out.println();
 	   
+	   
 	   ArrayList<Empleado> grupoTrabajo = new ArrayList<>();
+	   String codCliente = null;
+	   String codContrato = null;
+	   
 	   while(datosProyecto.next()) {
 		   
 		   
 		   
 		   while(datosGrupoDeTrabajo.next()) {
 			   //System.out.printf("%s\n", datosGrupoDeTrabajo.getString(2));
-			   if(datosGrupoDeTrabajo.getString(1).equals((datosProyecto.getString(1)))) {
-				   
+			   //if(datosGrupoDeTrabajo.getString(1).equals((datosProyecto.getString(1)))) {
+				   //System.out.printf("%s %s\n", datosGrupoDeTrabajo.getString(1), datosGrupoDeTrabajo.getString(2));
 				   for (Empleado empleado : Empresa.getInstance().getEmpleados()) {
+					   //System.out.printf("%s\n", empleado.getId());
 					    if (empleado.getId().equals(datosGrupoDeTrabajo.getString(2))) {
-					        System.out.printf("%s existe en empresa\n", datosGrupoDeTrabajo.getString(2));
+					    	grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
+					        System.out.printf("%s = %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
 					    }
 					    else {
-					    	System.out.printf("%s no existe en empresa\n", datosGrupoDeTrabajo.getString(2));
+					    	System.out.printf("%s != %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
 					    }
 					}
-				   
-				   //grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
-				   //System.out.printf("%s\n", datosGrupoDeTrabajo.getString(2));
-			   }
 		   }
 		   
+		   for(int i = 0; i < grupoTrabajo.size(); i++) {
+			   System.out.printf("%s ", grupoTrabajo.get(i).getCargo());
+		   }
+		   
+		   ordenarGrupoDeTrabajo(grupoTrabajo);
+		   
+		   System.out.println();
+		   
+		   for(int i = 0; i < grupoTrabajo.size(); i++) {
+			   System.out.printf("%s ", grupoTrabajo.get(i).getCargo());
+		   }
 		   
 		   
 		   while (datosContrato.next()) {
 			   
-			   
-			   if(Integer.parseInt(datosContrato.getString(2)) == Integer.parseInt(datosProyecto.getString(1))) {
+			   if(datosContrato.getString(2).equals((datosProyecto.getString(1)))) {
+				   
+				   codCliente = datosContrato.getString(3);
+				   codContrato = datosContrato.getString(1);
+				   
+				   System.out.printf("Contrato");
 				   
 				   //System.out.printf("len GT = %d\n", grupoTrabajo.size());
 				   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));
@@ -533,17 +560,59 @@ public class DBConnection implements Serializable{
 				   //System.out.printf("un sueldo %d\n", proyecto.getGrupoTrabajo().get(0).getSalarioHora());
 				   //System.out.printf("un sueldo = %f", proyecto.getGrupoTrabajo().get(0).getCedula());
 				   
-				   /*Contrato contrato = new Contrato(proyecto, new SimpleDateFormat("yyyy-MM-dd").parse(datosContrato.getString(5)));
+				   Contrato contrato = new Contrato(proyecto, new SimpleDateFormat("yyyy-MM-dd").parse(datosContrato.getString(5)));
 				   contrato.setId(datosContrato.getString(1));
-				   contrato.setCliente(Empresa.getInstance().getClienteById(datosCliente.getString(3)));
+				   contrato.setCliente(Empresa.getInstance().getClienteById(codCliente));
 				   proyecto.setContrato(contrato);
-				   Empresa.getInstance().agregarProyecto(proyecto);*/
+				   Empresa.getInstance().agregarProyecto(proyecto);
 				   
 				   break; // ????????????????????/
 			   }
 			
 		   }
-	   } 
+		   
+		   /*while (datosCliente.next()) {
+				
+			   if(datosCliente.getString(1).equals(codCliente)) {
+				   
+			   }
+			
+		   }*/
+	   }
+   }
+   
+   private void ordenarGrupoDeTrabajo(ArrayList<Empleado> grupoDeTrabajo) {
+	   	   
+	   for(int i = 0; i < grupoDeTrabajo.size(); i++) {
+		   for(int j = i; j < grupoDeTrabajo.size(); j++) {
+			   if(i == 0) {
+				   if(grupoDeTrabajo.get(j).getCargo().equals("Jefe de proyectos")) {
+					   Collections.swap(grupoDeTrabajo, i, j);
+					   i++;
+					   j = i;
+				   }
+			   }
+			   if(i == 1) {
+				   if(grupoDeTrabajo.get(j).getCargo().equals("Planificador")) {
+					   Collections.swap(grupoDeTrabajo, i, j);
+					   i++;
+					   j = i;
+				   }
+			   }
+			   if(i == 2 || i == 3) {
+				   if(grupoDeTrabajo.get(j).getCargo().equals("Programador")) {
+					   Collections.swap(grupoDeTrabajo, i, j);
+					   i++;
+					   j = i;
+				   }
+			   }
+		   }
+	   }
+	   
+	   /*for(int i = 0; i < grupoDeTrabajo.size(); i++) {
+		   System.out.printf("%s ", grupoDeTrabajo.get(i).getCargo());
+	   }*/
+	   
    }
     
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
