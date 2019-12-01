@@ -51,7 +51,8 @@ public class RegContrato extends JDialog {
 	private JTextField txtNombreProyecto;
 	private JTextField txtIdCliente;
 	private JTextField txtNombreCliente;
-	private String patron = "dd/MM/yyyy";
+	//private String patron = "dd/MM/yyyy";
+	private String patron = "yyyy/MM/dd";
 	private JSpinner spnFecha;
 	private Date fechaEntrega;
 	private int caretPosition;

@@ -7,17 +7,27 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.sql.rowset.CachedRowSet;
 import javax.swing.table.DefaultTableModel;
 
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.ResultSetMetaData;
+import com.sun.rowset.CachedRowSetImpl;
+
 import Logico.Cliente;
+import Logico.Contrato;
 import Logico.Disegnador;
 import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Jefe;
 import Logico.Planificador;
 import Logico.Programador;
+import Logico.Proyecto;
 
 public class DBConnection implements Serializable{
 	
@@ -390,7 +400,7 @@ public class DBConnection implements Serializable{
 		return 0;
     }
     
-   public void cargarDatos() throws SQLException
+   public void cargarDatos() throws SQLException, ParseException
    {
 	   
 	   Statement st = conn.createStatement();
@@ -462,6 +472,45 @@ public class DBConnection implements Serializable{
 		   Empresa.getInstance().nuevoCliente(cliente);
 	   }
 	   
+	   
+	   
+	   ResultSet rsProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, atrasado FROM Proyecto");
+	   CachedRowSet datosProyecto = new CachedRowSetImpl();
+	   datosProyecto.populate(rsProyecto);
+	   
+	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
+	   CachedRowSet datosContrato = new CachedRowSetImpl();
+	   datosProyecto.populate(rsContrato);
+	   
+	   ResultSet rsGrupoDeTrabajo = sta.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
+	   CachedRowSet datosGrupoDeTrabajo = new CachedRowSetImpl();
+	   datosGrupoDeTrabajo.populate(rsGrupoDeTrabajo);
+	   
+	   while(datosProyecto.next()) {
+		   
+		   ArrayList<Empleado> grupoTrabajo = new ArrayList<>();
+		   
+		   while(datosGrupoDeTrabajo.next()) {
+			   if(datosGrupoDeTrabajo.getString(1) == datosProyecto.getString(1)) {
+				   grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
+			   }
+		   }
+		   
+		   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));
+		   proyecto.setId(datosProyecto.getString(1)); // ?????????????
+		   
+		   while (datosContrato.next()) {
+			   			
+			   if(datosContrato.getString(2) == datosProyecto.getString(1)) {
+				   Contrato contrato = new Contrato(proyecto, new SimpleDateFormat("yyy/MM/dd").parse(datosContrato.getString(5)));
+				   contrato.setCliente(Empresa.getInstance().getClienteById(datosCliente.getString(3)));
+				   proyecto.setContrato(contrato);
+				   Empresa.getInstance().agregarProyecto(proyecto);
+				   break; // ????????????????????/
+			   }
+			
+		   }
+	   }	   
    }
     
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
