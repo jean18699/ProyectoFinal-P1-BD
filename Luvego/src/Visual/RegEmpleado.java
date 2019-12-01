@@ -515,7 +515,6 @@ public class RegEmpleado extends JDialog {
 						{
 							especialidades.add("Python");
 						}
-							
 						
 						int frecuencia = (int) spnFrecuencia.getValue();
 						
@@ -562,21 +561,21 @@ public class RegEmpleado extends JDialog {
 							else {
 														
 									if(rdbtnJefe.isSelected()) {
-										//Empleado jefe = new Jefe(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora);
-										//Empresa.getInstance().nuevoEmpleado(jefe);
+										Empleado jefe = new Jefe(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora);
+										Empresa.getInstance().nuevoEmpleado(jefe);
 										//JOptionPane.showMessageDialog(null, "Identificador asignado: "+jefe.getId(), "Registro completo", JOptionPane.INFORMATION_MESSAGE);
 										try {
-											DBConnection.getInstance().agregarJefe(cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);					} catch (ClassNotFoundException | SQLException e1) {
+											DBConnection.getInstance().agregarJefe(jefe.getId(),cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);					} catch (ClassNotFoundException | SQLException e1) {
 											e1.printStackTrace();
 										}
 									
 										
 									}
 									else if(rdbtnProgramador.isSelected()) {
-										//Empleado programador = new Programador(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora, especialidades);
-										//Empresa.getInstance().nuevoEmpleado(programador);
+										Empleado programador = new Programador(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora, especialidades);
+										Empresa.getInstance().nuevoEmpleado(programador);
 										try {
-											DBConnection.getInstance().agregarProgramador(cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);
+											DBConnection.getInstance().agregarProgramador(programador.getId(),cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);
 											for(int i = 0; i < especialidades.size();i++)
 											{
 												DBConnection.getInstance().agregarEspecialidadProgramador(especialidades.get(i));	
@@ -590,10 +589,10 @@ public class RegEmpleado extends JDialog {
 										//JOptionPane.showMessageDialog(null, "Identificador asignado: "+identifi, "Registro completo", JOptionPane.INFORMATION_MESSAGE);
 									}
 									else if(rdbtnPlanificador.isSelected()) {
-										/*Empleado planificador = new Planificador(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora, frecuencia);
+										Empleado planificador = new Planificador(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora, frecuencia);
 										Empresa.getInstance().nuevoEmpleado(planificador);
-		*/								try {
-											DBConnection.getInstance().agregarPlanificador(cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora, frecuencia);
+										try {
+											DBConnection.getInstance().agregarPlanificador(planificador.getId(),cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora, frecuencia);
 										} catch (ClassNotFoundException | SQLException e1) {
 											e1.printStackTrace();
 										}
@@ -601,8 +600,9 @@ public class RegEmpleado extends JDialog {
 										//JOptionPane.showMessageDialog(null, "Identificador asignado: "+planificador.getId(), "Registro completo", JOptionPane.INFORMATION_MESSAGE);
 									}
 									else if(rdbtnDisegnador.isSelected()) {
+										Empleado Disegnador = new Disegnador(cedula,nombre, apellidos, sexo, edad,telefono,telefono2, direccion, salarioHora);
 										try {
-											DBConnection.getInstance().agregarDisegnador(cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);
+											DBConnection.getInstance().agregarDisegnador(Disegnador.getId(),cedula, nombre, apellidos, sexo, telefono, telefono2, correo, direccion, edad, salarioHora);
 										} catch (ClassNotFoundException | SQLException e1) {
 											// TODO Auto-generated catch block
 											e1.printStackTrace();

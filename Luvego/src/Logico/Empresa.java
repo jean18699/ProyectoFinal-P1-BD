@@ -61,6 +61,19 @@ public class Empresa implements Serializable {
 		loginUser.setPass("0000");
 	}
 
+	public void RESET()
+	{
+		clientes = new ArrayList<>();
+		contratos = new ArrayList<>();
+		empleados = new ArrayList<>();
+		proyectos = new ArrayList<>();
+		ultimoProyecto = null;
+		loginUser = new User();
+		ganancias = 0;
+		cantProyectosTerminados = 0;
+		cantProyectosCancelados = 0;
+	}
+	
 	public int getTotalProyectos() {
 		return totalProyectos;
 	}

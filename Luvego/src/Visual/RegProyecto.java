@@ -764,18 +764,14 @@ public class RegProyecto extends JDialog {
 
 							txtIdAdicional.setText(select);
 							if(cmbOcupacion.getSelectedIndex() == 1) {
-								System.out.println(cmbOcupacion.getSelectedIndex());
 								cargarPlanificadores();
 							}
 							else if(cmbOcupacion.getSelectedIndex() == 2) {
-								System.out.println(cmbOcupacion.getSelectedIndex());
 								cargarProgramadoresEspecializados();
 							}
 							else if(cmbOcupacion.getSelectedIndex() == 3) {
-								System.out.println(cmbOcupacion.getSelectedIndex());
 								cargarDisegnadores();
-							}
-							
+							}	
 						}
 
 						if (!btnCargarJefe.isEnabled()) {

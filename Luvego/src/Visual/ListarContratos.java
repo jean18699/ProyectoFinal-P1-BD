@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.MouseAdapter;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 
 import com.sun.glass.events.MouseEvent;
 
-import Connection.DBConnection;
 import Logico.Cliente;
 import Logico.ColorTabla;
 import Logico.Contrato;
@@ -135,12 +133,9 @@ public class ListarContratos extends JDialog {
 			model = new DefaultTableModel();
 			
 			
-			try {
-				table.setModel(DBConnection.getInstance().mostrarContratos());
-			} catch (ClassNotFoundException | SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			String[] columnnames = { "Código", "Cliente", "Fecha de inicio","Fecha de entrega","Precio acordado"};
+			model.setColumnIdentifiers(columnnames);
+			table.setModel(model);
 			scrollPane.setViewportView(table);
 		
 		}

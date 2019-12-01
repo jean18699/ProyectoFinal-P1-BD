@@ -7,10 +7,17 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
 
+import Logico.Cliente;
+import Logico.Disegnador;
+import Logico.Empleado;
 import Logico.Empresa;
+import Logico.Jefe;
+import Logico.Planificador;
+import Logico.Programador;
 
 public class DBConnection implements Serializable{
 	
@@ -41,21 +48,21 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
-    public void agregarProgramador(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
-        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProgramador]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+    public void agregarProgramador(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProgramador]('"+codigo+"','"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
         cs.executeUpdate();
     }
-    public void agregarDisegnador(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
-        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+    public void agregarDisegnador(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+codigo+"',''"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
         cs.executeUpdate();
     }
-    public void agregarPlanificador(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora,int frecuencia) throws SQLException {
-        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarPlanificador]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"','"+frecuencia+"')}");
+    public void agregarPlanificador(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora,int frecuencia) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarPlanificador]('"+codigo+"','"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"','"+frecuencia+"')}");
         cs.executeUpdate();
     }
     
-    public void agregarJefe(String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
-        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarJefe]('"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+    public void agregarJefe(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarJefe]('"+codigo+"','"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
         cs.executeUpdate();
     }
     
@@ -383,7 +390,79 @@ public class DBConnection implements Serializable{
 		return 0;
     }
     
-   
+   public void cargarDatos() throws SQLException
+   {
+	   
+	   Statement st = conn.createStatement();
+	   Statement st2 = conn.createStatement();
+   	  
+	   //Ingresando Programadores
+	   ResultSet datosEmpleado = st.executeQuery("select codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora from infoEmpleado where codigo like('PRG%')");
+   	   
+	   //especialidades del programador
+	   ResultSet especialidad;
+	   ArrayList<String> especialidades = new ArrayList<String>();
+	      	   
+   	   while(datosEmpleado.next())
+   	   {
+   		   especialidad = st2.executeQuery("select * from Programador_Especialidad where codigo ="+"'"+datosEmpleado.getString(1)+"'");
+   		   especialidades = new ArrayList<String>();
+   		   
+   		   while(especialidad.next())
+   		   {
+   			   especialidades.add(especialidad.getString(2));
+   			
+   		   }
+
+   		   Empleado empleado = new Programador(datosEmpleado.getString(1),datosEmpleado.getString(2),
+   				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
+   				datosEmpleado.getString(8),datosEmpleado.getFloat(9),especialidades);
+   		   
+   		   Empresa.getInstance().nuevoEmpleado(empleado);
+   	   }
+   	   
+   	   datosEmpleado = st.executeQuery("select codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora from infoEmpleado where codigo like('DSG%')");
+	   
+   	   while(datosEmpleado.next())
+   	   {
+   		   Empleado empleado = new Disegnador(datosEmpleado.getString(1),datosEmpleado.getString(2),
+   				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
+   				datosEmpleado.getString(8),datosEmpleado.getFloat(9));
+   		   
+   		   Empresa.getInstance().nuevoEmpleado(empleado);
+   	   }
+   	   
+   	   datosEmpleado = st.executeQuery("select infoEmpleado.codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora,frecuencia from infoEmpleado inner join Planificador on Planificador.codigo = infoEmpleado.codigo");
+	   
+	   while(datosEmpleado.next())
+	   {
+		   Empleado empleado = new Planificador(datosEmpleado.getString(1),datosEmpleado.getString(2),
+				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
+				datosEmpleado.getString(8),datosEmpleado.getFloat(9),datosEmpleado.getInt(10));
+		   
+		   Empresa.getInstance().nuevoEmpleado(empleado);
+	   }
+	   
+	   datosEmpleado = st.executeQuery("select infoEmpleado.codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora from infoEmpleado where codigo like('JFE%')");
+	   
+	   while(datosEmpleado.next())
+	   {
+		   Empleado empleado = new Jefe(datosEmpleado.getString(1),datosEmpleado.getString(2),
+				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
+				datosEmpleado.getString(8),datosEmpleado.getFloat(9));
+		   
+		   Empresa.getInstance().nuevoEmpleado(empleado);
+	   }
+	   
+	   ResultSet datosCliente = st.executeQuery("select cedula,nombre,correo,telefono1,telefono2,direccion,sexo from infoRegistroCliente");
+	   
+	   while(datosCliente.next())
+	   {
+		   Cliente cliente = new Cliente(datosCliente.getString(1),datosCliente.getString(2),datosCliente.getString(3),datosCliente.getString(4),datosCliente.getString(5),datosCliente.getString(6),datosCliente.getString(7));
+		   Empresa.getInstance().nuevoCliente(cliente);
+	   }
+	   
+   }
     
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
 	// TODO Auto-generated method stub

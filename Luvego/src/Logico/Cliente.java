@@ -19,16 +19,16 @@ public class Cliente implements Serializable{
 	private String direccion;
 	private ArrayList<Contrato> contratos;
 	private int totalContratos;
-	private String genero;
+	private String sexo;
 	
 	
-	public Cliente(String cedula, String nombre,String correo,String telefono,String telefono2, String direccion,String genero) {
+	public Cliente(String cedula, String nombre,String correo,String telefono,String telefono2, String direccion,String sexo) {
 		super();
 		
 		cont++;
 		this.id = Integer.toString(cont);
 		this.nombre = nombre;
-		this.genero = genero;
+		this.sexo = sexo;
 		this.telefono = telefono;
 		this.telefono2 = telefono2;
 		this.cedula = cedula;
@@ -59,7 +59,7 @@ public class Cliente implements Serializable{
 
 
 	public String getGenero() {
-		return genero;
+		return sexo;
 	}
 
 
@@ -84,7 +84,7 @@ public class Cliente implements Serializable{
 
 
 	public void setGenero(String genero) {
-		this.genero = genero;
+		this.sexo = sexo;
 	}
 
 

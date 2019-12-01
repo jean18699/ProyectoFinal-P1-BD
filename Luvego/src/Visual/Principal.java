@@ -92,7 +92,8 @@ public class Principal extends JFrame {
 				try {
 
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
+					DBConnection.getInstance().cargarDatos();
+					
 					Principal frame = new Principal();
 					frame.setVisible(true);
 				} catch (Exception e) {
