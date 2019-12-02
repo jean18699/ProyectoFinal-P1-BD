@@ -59,7 +59,7 @@ public class DBConnection implements Serializable{
         sta2 = conn.createStatement();
         sta3 = conn.createStatement();
         
-        setTotales(); //poniendo en las ventanas todos los totales de los objetos registrados
+        //setTotales(); //poniendo en las ventanas todos los totales de los objetos registrados
 
     }
     
@@ -465,7 +465,7 @@ public class DBConnection implements Serializable{
     
     */
     ////////RETORNO DE CANTIDADES\\\\\\\\\\\\
-    public int setTotales() throws SQLException
+    /*public int setTotales() throws SQLException
     {
     	
     	Statement st = conn.createStatement();
@@ -499,7 +499,7 @@ public class DBConnection implements Serializable{
         	Empresa.getInstance().setTotalDisegnadores(rs.getInt("total"));	
         }
 		return 0;
-    }
+    }*/
     
    public void cargarDatos() throws SQLException, ParseException
    {
