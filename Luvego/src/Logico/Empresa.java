@@ -1,8 +1,15 @@
 package Logico;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import Connection.DBConnection;
 
 public class Empresa implements Serializable {
 
@@ -563,7 +570,14 @@ public class Empresa implements Serializable {
 			ultimaGanancia = ganancia;
 			UltimasPerdida = 0;
 		}
-
+			
+			DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			try {
+				DBConnection.getInstance().guardarVenta(Integer.parseInt(ultimoId), ultimoIdCliente, ultimoNombreCliente,ultimoNombreProyecto, df.format(ultimoFechaSolicitud), df.format(ultimoFechaEntrega), UltimasPerdida, ultimaGanancia);
+			} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			cancelarContrato(proyecto.getContrato().getId());
 		/*
 		 * for (int i = 0; i < contratos.size(); i++) { if

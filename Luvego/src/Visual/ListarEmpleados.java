@@ -97,6 +97,17 @@ public class ListarEmpleados extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 
+		for(int i = 0; i < Empresa.getInstance().getEmpleados().size();i++)
+		{
+			try {
+				DBConnection.getInstance().ProyectosActivos(Empresa.getInstance().getEmpleados().get(i).getId());
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			};
+				
+		}
+		
 		scrollPane = new JScrollPane();
 		scrollPane.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		scrollPane.setBounds(0, 0, 700, 216);

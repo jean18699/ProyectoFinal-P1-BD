@@ -31,6 +31,7 @@ import Logico.Proyecto;
 import javafx.print.Collation;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
 public class DBConnection implements Serializable{
 	
@@ -85,16 +86,28 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
-    public void agregarProyectoContrato(String idProyecto, String nombreProyecto, String estadoProyecto, String lenguaje, String atrasado, String especialidad,
+    public void agregarProyectoContrato(String idProyecto, String nombreProyecto, String estadoProyecto, String lenguaje,int completado, String especialidad,
     		String cedulaCliente,
     		String idContrato, String fechaInicio, String fechaEntrega, String precioFinal, String estadoContrato,
     		String codigoJefe, String codigoPlanificador, String codigoProgramadorUno, String codigoProgramadorDos, String codigoAdicional) throws SQLException {
     	
-    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProyectoContrato]('"+idProyecto+"','"+nombreProyecto+"','"+estadoProyecto+"','"+lenguaje+"','"+atrasado+"','"+especialidad+"','"+
+    
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProyectoContrato]('"+idProyecto+"','"+nombreProyecto+"','"+estadoProyecto+"','"+lenguaje+"','"+completado+"','"+especialidad+"','"+
     																						cedulaCliente+"','"+
 																							idContrato+"','"+fechaInicio+"','"+fechaEntrega+"','"+precioFinal+"','"+estadoContrato+"','"+
 																							codigoJefe+"','"+codigoPlanificador+"','"+codigoProgramadorUno+"','"+codigoProgramadorDos+"','"+codigoAdicional+"')}");
     	cs.executeUpdate();
+    	
+    	/*CallableStatement csJefe = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoJefe+"')}");
+    	csJefe.executeUpdate();
+    	CallableStatement csProg = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoProgramadorUno+"')}");
+    	csJefe.executeUpdate();
+    	CallableStatement csProg2 = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoProgramadorDos+"')}");;
+    	csJefe.executeUpdate();
+    	CallableStatement csPlan = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoPlanificador+"')}");
+    	csJefe.executeUpdate();
+    	CallableStatement csAdicional = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoAdicional+"')}");
+    	csJefe.executeUpdate();*/
     }
 
     public void agregarEspecialidadProgramador(String codigo,String especialidad) throws SQLException
@@ -237,6 +250,19 @@ public class DBConnection implements Serializable{
         
         return modelo;      
       }   
+    
+    public void guardarVenta(int idProyecto,String cedulaCliente,String nombreCliente,String nombreProyecto,String fechaInicio, String fechaEntrega, float perdidasTotales, float ganancias) throws SQLException
+    {
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spGuardarVenta]('"+idProyecto+"','"+cedulaCliente+"','"+nombreCliente+"','"+nombreProyecto+"','"+fechaInicio+"','"+fechaEntrega+"','"+perdidasTotales+"','"+ganancias+"')}");
+        cs.executeUpdate();
+        
+    
+    	/*Statement s = conn.createStatement();
+        s.executeUpdate("insert into Venta(idProyecto,idCliente,nombreCliente,nombreProyecto,fecha_inicio,fecha_entrega,perdidasTotales,ganancias)" 
+        		+"values(idProyecto,cedulaCliente,nombreCliente,nombreProyecto,fechaInicio,fechaEntrega,perdidasTotales,ganancias)");
+        */
+    	//new SimpleDateFormat("yyyy-MM-dd").parse(datosContrato.getString(5)
+    }
     
     public DefaultTableModel mostrarProgramador() throws SQLException{
 
@@ -447,7 +473,89 @@ public class DBConnection implements Serializable{
 	   
 	   Statement st = conn.createStatement();
 	   Statement st2 = conn.createStatement();
-   	  
+	   Statement st3 = conn.createStatement();
+	   Statement st4 = conn.createStatement();
+	   Statement st5 = conn.createStatement();
+	   Statement st6 = conn.createStatement();
+	   Statement st7 = conn.createStatement();
+	   Statement st8 = conn.createStatement();
+	   Statement st9 = conn.createStatement();
+	   Statement st10 = conn.createStatement();
+	   Statement st11 = conn.createStatement();
+	   Statement st12 = conn.createStatement();
+	   Statement st13 = conn.createStatement();
+	    	  
+	   
+	   //AREA ESTADISTICA
+	   ResultSet ventas = st.executeQuery("select * from Venta");
+	   ResultSet ganancias = st2.executeQuery("select sum(ganancias) from Venta");
+	   ResultSet perdidas = st3.executeQuery("select sum(perdidas) from Venta");
+	   ResultSet totalDesktop = st4.executeQuery("select realizados from Popularidad where especialidad = 'Desktop'");
+	   ResultSet totalMovil = st5.executeQuery("select realizados from Popularidad where especialidad = 'Movil'");
+	   ResultSet totalWeb = st6.executeQuery("select realizados from Popularidad where especialidad = 'Web'");
+     
+	   ResultSet totalJava = st8.executeQuery("select lenguaje,count(*) as cantidad from Proyecto\r\n" + 
+	   		"where lenguaje = 'Java'\r\n" + 
+	   		"group by lenguaje"); 
+	   ResultSet totalCpp = st9.executeQuery("select lenguaje,count(*) as cantidad from Proyecto\r\n" + 
+		   		"where lenguaje = 'C++'\r\n" + 
+		   		"group by lenguaje");
+	   ResultSet totalCS = st10.executeQuery("select lenguaje,count(*) as cantidad from Proyecto\r\n" + 
+		   		"where lenguaje = 'C#'\r\n" + 
+		   		"group by lenguaje");
+	   ResultSet totalPython = st11.executeQuery("select lenguaje,count(*) as cantidad from Proyecto\r\n" + 
+		   		"where lenguaje = 'Python'\r\n" + 
+		   		"group by lenguaje");   
+	   ResultSet totalHTML = st13.executeQuery("select lenguaje,count(*) as cantidad from Proyecto\r\n" + 
+		   		"where lenguaje like('HTM%')\r\n" + 
+		   		"group by lenguaje");
+		   
+	   
+	   //ResultSet totalMovil = st5.executeQuery("select realizados from Popularidad where especialidad = 'Movil'");
+	   //ResultSet totalWeb = st6.executeQuery("select realizados from Popularidad where especialidad = 'Web'");
+	   
+	   while(ganancias.next())
+		   Empresa.getInstance().setGanancias(ganancias.getFloat(1));
+	   while(perdidas.next())
+		   Empresa.getInstance().setPerdidasTotales(perdidas.getFloat(1));
+	   while(totalJava.next())
+		   Empresa.getInstance().setCantJava(totalJava.getInt(2));
+	   while(totalCS.next())
+		   Empresa.getInstance().setCantCSharp(totalCS.getInt(2));
+	   while(totalCpp.next())
+		   Empresa.getInstance().setCantCP(totalCpp.getInt(2));
+	   while(totalCpp.next())
+		   Empresa.getInstance().setCantPython(totalPython.getInt(2));
+	   while(totalCpp.next())
+		   Empresa.getInstance().setCantHtml(totalHTML.getInt(2));
+	   
+	   //Popularidad de proyectos
+	   while(totalDesktop.next())
+		    Empresa.getInstance().setCantDesktop(totalDesktop.getInt(1));
+	   while(totalMovil.next())
+	   		Empresa.getInstance().setCantMovil(totalMovil.getInt(1));
+	   while(totalWeb.next())
+	   		Empresa.getInstance().setCantWeb(totalWeb.getInt(1));
+	   
+	   while(totalJava.next())
+		   Empresa.getInstance().setCantJava(totalJava.getInt(2));
+	   
+	   while(ventas.next())
+	   {
+		   Empresa.getInstance().setUltimoId(ventas.getString(1));
+		   Empresa.getInstance().setUltimoIdCliente(ventas.getString(2));
+		   Empresa.getInstance().setUltimoNombreCliente(ventas.getString(3));
+		   Empresa.getInstance().setUltimoNombreProyecto(ventas.getString(4));
+		   //Empresa.getInstance().setUltimoFechaSolicitud(ventas.getDate(4));
+		  // Empresa.getInstance().setUltimoFechaEntrega(ventas.getDate(5).valueOf(Date));
+		   Empresa.getInstance().setUltimasPerdida(ventas.getFloat(7));
+		   Empresa.getInstance().setUltimaGanancia(ventas.getFloat(8));
+	   }
+	   
+	   /*ventas = st.executeQuery("select count(*) from Venta");
+	   while(ventas.next())
+		   Empresa.getInstance().setCantProyectosTerminados(ventas.getInt(1));
+	   */
 	   //Ingresando Programadores
 	   ResultSet datosEmpleado = st.executeQuery("select codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora from infoEmpleado where codigo like('PRG%')");
    	   
@@ -528,7 +636,7 @@ public class DBConnection implements Serializable{
 	   }
 	   
 	   
-	   ResultSet datosProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, atrasado FROM Proyecto");
+	   ResultSet datosProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, completado FROM Proyecto where completado = 0");
 	   /*ResultSet rsProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, atrasado FROM Proyecto");
 	   CachedRowSet datosProyecto = new CachedRowSetImpl();
 	   datosProyecto.populate(rsProyecto);*/
@@ -586,7 +694,8 @@ public class DBConnection implements Serializable{
 				   
 				   //System.out.printf("len GT = %d\n", grupoTrabajo.size());
 				   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));
-				   proyecto.setId(datosProyecto.getString(1)); // ?????????????
+				   proyecto.setId(datosProyecto.getString(1));
+				   proyecto.setCont(Integer.parseInt(proyecto.getId()));
 				   //System.out.printf("un sueldo %d\n", proyecto.getGrupoTrabajo().get(0).getSalarioHora());
 				   //System.out.printf("un sueldo = %f", proyecto.getGrupoTrabajo().get(0).getCedula());
 				   
@@ -645,18 +754,22 @@ public class DBConnection implements Serializable{
 	   
    }
 
-public void addProyectoActivo(ArrayList<Empleado> grupoTrabajo) throws SQLException {
-	 CallableStatement cs;
+public void ProyectosActivos(String codigo) throws SQLException {
+	
+	CallableStatement cs = conn.prepareCall("{call [dbo].[spProyectoActivos]('"+codigo+"')}");
+    cs.executeUpdate();
 	 
-	for(int i = 0; i < grupoTrabajo.size();i++)
+	/*for(int i = 0; i < grupoTrabajo.size();i++)
 	{
 		 cs = conn.prepareCall("exec spIncrementarProyectosActivos '"+grupoTrabajo.get(i).getId()+"'");
 		 cs.executeUpdate();
 			 
-	}
-	
+	}*/
 }
-    
+
+
+
+
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
 	// TODO Auto-generated method stub
 	

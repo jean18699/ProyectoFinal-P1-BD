@@ -23,8 +23,8 @@ public class Proyecto implements Serializable {
 	
 	public Proyecto(String nombre, ArrayList<Empleado> grupoTrabajo, String clasificacion,String lenguaje) {
 
-		Proyecto.cont++;
-		this.id = Integer.toString(cont);
+		//Proyecto.cont++;
+		this.id = Integer.toString(++cont);
 		this.nombre = nombre;
 		this.grupoTrabajo = grupoTrabajo;
 		// this.sumaSalarios = getSumaSalarios();
@@ -164,12 +164,17 @@ public class Proyecto implements Serializable {
 	public static int getCont() {
 		return cont;
 	}
+	
+	public static void setCont(int numero) {
+		cont = numero;
+	}
+	
 
 	public boolean isAtrasado() {
 		return atrasado;
 	}
 	
-	public String getAtrasadoBIT() {
+	/*public String getCompletadoBIT() {
 		String isAtrasado = "0";
 		
 		if(isAtrasado()) {
@@ -178,7 +183,7 @@ public class Proyecto implements Serializable {
 		
 		return isAtrasado;
 				
-	}
+	}*/
 
 	public void setAtrasado(boolean atrasado) {
 		this.atrasado = atrasado;
