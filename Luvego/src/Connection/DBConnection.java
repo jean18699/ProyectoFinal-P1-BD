@@ -502,9 +502,11 @@ public class DBConnection implements Serializable{
 	   CachedRowSet datosProyecto = new CachedRowSetImpl();
 	   datosProyecto.populate(rsProyecto);
 	   
-	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
+	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final estado FROM Contrato");
 	   CachedRowSet datosContrato = new CachedRowSetImpl();
 	   datosContrato.populate(rsContrato);
+	   
+	   
 	   
 	   ResultSet rsGrupoDeTrabajo = sta.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
 	   CachedRowSet datosGrupoDeTrabajo = new CachedRowSetImpl();

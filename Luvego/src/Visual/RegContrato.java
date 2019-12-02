@@ -336,6 +336,7 @@ public class RegContrato extends JDialog {
 							contrato.setProyecto(null);
 							contrato.setFechaEntrega(fechaEntrega);
 							contrato.setCliente(cliente);
+							contrato.setEstado('A');
 							proyecto.setContrato(contrato);
 							contrato.setId(Integer.toString(Empresa.getInstance().getTotalProyectos()+1));
 							
