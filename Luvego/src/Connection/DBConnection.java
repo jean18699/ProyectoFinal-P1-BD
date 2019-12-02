@@ -36,6 +36,8 @@ public class DBConnection implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
     private Statement sta;
+    private Statement sta2;
+    private Statement sta3;
     private static DBConnection connectionToStore;
     private Connection conn;
     
@@ -44,6 +46,8 @@ public class DBConnection implements Serializable{
     	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
     	conn = DriverManager.getConnection("jdbc:sqlserver://ojosdelacara.database.windows.net:1433;database=Luvego;user=JeanGeorge@ojosdelacara;password=Luvego12*45JeanKGeorge;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
         sta = conn.createStatement();
+        sta2 = conn.createStatement();
+        sta3 = conn.createStatement();
         
         setTotales(); //poniendo en las ventanas todos los totales de los objetos registrados
 
@@ -524,26 +528,21 @@ public class DBConnection implements Serializable{
 	   }
 	   
 	   
-	   
-	   ResultSet rsProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, atrasado FROM Proyecto");
+	   ResultSet datosProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, atrasado FROM Proyecto");
+	   /*ResultSet rsProyecto = sta.executeQuery("SELECT idProyecto, nombre, especialidad, estado, lenguaje, atrasado FROM Proyecto");
 	   CachedRowSet datosProyecto = new CachedRowSetImpl();
-	   datosProyecto.populate(rsProyecto);
+	   datosProyecto.populate(rsProyecto);*/
 	   
-	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
+	   ResultSet datosContrato = sta2.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
+	   /*ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
 	   CachedRowSet datosContrato = new CachedRowSetImpl();
-	   datosContrato.populate(rsContrato);
+	   datosContrato.populate(rsContrato);*/
 	   
 	   
-	   
-	   ResultSet rsGrupoDeTrabajo = sta.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
+	   ResultSet datosGrupoDeTrabajo = sta3.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
+	   /*ResultSet rsGrupoDeTrabajo = sta2.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
 	   CachedRowSet datosGrupoDeTrabajo = new CachedRowSetImpl();
-	   datosGrupoDeTrabajo.populate(rsGrupoDeTrabajo);
-
-	   
-	   /*for(int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-		   System.out.printf("%s\n", Empresa.getInstance().getEmpleados().get(i).getId());
-	   }
-	   System.out.println();*/
+	   datosGrupoDeTrabajo.populate(rsGrupoDeTrabajo);*/
 	   
 	   
 	   ArrayList<Empleado> grupoTrabajo = new ArrayList<>();

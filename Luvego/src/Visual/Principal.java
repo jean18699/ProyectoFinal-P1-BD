@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -514,10 +515,21 @@ public class Principal extends JFrame {
 			if (Empresa.getInstance().getProyectos().get(i).getContrato().getFechaEntrega().before(fecha)) {
 
 				Empresa.getInstance().getProyectos().get(i).setEstado("Atrasado");
-
 				Empresa.getInstance().getProyectos().get(i).setAtrasado(true);
+				try {
+					DBConnection.getInstance().fijarEstadoProyecto(Empresa.getInstance().getProyectos().get(i).getId(), "Atrasado");
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} else {
 				Empresa.getInstance().getProyectos().get(i).setEstado("Normal");
+				try {
+					DBConnection.getInstance().fijarEstadoProyecto(Empresa.getInstance().getProyectos().get(i).getId(), "Normal");
+				} catch (ClassNotFoundException | SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -531,15 +543,33 @@ public class Principal extends JFrame {
 							.getProyectosAtrasados() == 2) {
 						Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j)
 								.setEvaluacionAnual("Bueno");
+						try {
+							DBConnection.getInstance().fijarEvaluacionAnualEmpleado(Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j).getId(), "Normal");
+						} catch (ClassNotFoundException | SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					if (Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j)
 							.getProyectosAtrasados() > 2) {
 						Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j).setEvaluacionAnual("Malo");
+						try {
+							DBConnection.getInstance().fijarEvaluacionAnualEmpleado(Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j).getId(), "Malo");
+						} catch (ClassNotFoundException | SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					if (Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j)
 							.getProyectosAtrasados() < 2) {
 						Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j)
 								.setEvaluacionAnual("Excelente");
+						try {
+							DBConnection.getInstance().fijarEvaluacionAnualEmpleado(Empresa.getInstance().getProyectos().get(i).getGrupoTrabajo().get(j).getId(), "Excelente");
+						} catch (ClassNotFoundException | SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}
