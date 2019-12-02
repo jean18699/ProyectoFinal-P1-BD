@@ -378,8 +378,11 @@ public class RegContrato extends JDialog {
 							{
 								DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 								Empresa.getInstance().agregarProyecto(proyecto);
+								
 								try {
+									DBConnection.getInstance().addProyectoActivo(proyecto.getGrupoTrabajo());
 									DBConnection.getInstance().agregarProyectoContrato(proyecto.getId(), proyecto.getNombre(), proyecto.getEstado(), proyecto.getLenguaje(), (String) proyecto.getAtrasadoBIT(), proyecto.getClasificacion(), cliente.getCedula(), contrato.getId(), df.format(contrato.getFechaInicio()), df.format(contrato.getFechaEntrega()), String.valueOf(contrato.getPrecioFinal()), String.valueOf(contrato.getEstado()), proyecto.getGrupoTrabajo().get(0).getId(), proyecto.getGrupoTrabajo().get(1).getId(), proyecto.getGrupoTrabajo().get(2).getId(), proyecto.getGrupoTrabajo().get(3).getId(), proyecto.getGrupoTrabajo().get(4).getId());
+									
 								} catch (ClassNotFoundException | SQLException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();

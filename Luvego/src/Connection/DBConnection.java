@@ -378,6 +378,18 @@ public class DBConnection implements Serializable{
          return modelo;       
     }
     
+    public void fijarEstadoProyecto(String idProyecto, String estado) throws SQLException
+    {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spFijarEstadoProyecto]('"+idProyecto+"','"+estado+"')}");
+        cs.executeUpdate();
+    }
+
+    public void fijarEvaluacionAnualEmpleado(String idEmpleado, String evaluacion) throws SQLException
+    {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spFijarEvaluacionAnualEmpleado]('"+idEmpleado+"','"+evaluacion+"')}");
+        cs.executeUpdate();
+    }
+    
     
   /*  public void getInfoEmpleadoByCodigo(String codigo)
     {
@@ -385,6 +397,9 @@ public class DBConnection implements Serializable{
     	  ResultSet rs = cs.executeQuery("exec spInfoEmpleadoByCodigo")
           
     }
+    
+    
+    
     */
     ////////RETORNO DE CANTIDADES\\\\\\\\\\\\
     public int setTotales() throws SQLException
@@ -456,7 +471,8 @@ public class DBConnection implements Serializable{
    		   Empresa.getInstance().nuevoEmpleado(empleado);
    	   }
    	   
-   	   datosEmpleado = st.executeQuery("select codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora from infoEmpleado where codigo like('DSG%')");
+   	 
+   	   datosEmpleado = st.executeQuery("select codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora,proyectosAtrasados,proyectosActivos,totalProyectos,condicion,evaluacion,correo from infoEmpleado where codigo like('DSG%')");
 	   
    	   while(datosEmpleado.next())
    	   {
@@ -464,8 +480,13 @@ public class DBConnection implements Serializable{
    				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
    				datosEmpleado.getString(8),datosEmpleado.getFloat(9));
    		   
+   		   
+   		   
    		empleado.setId(datosEmpleado.getString(1).substring(4));
-   		   Empresa.getInstance().nuevoEmpleado(empleado);
+   		
+ 
+   		Empresa.getInstance().nuevoEmpleado(empleado);
+   		empleado.setProyectosAtrasados(datosEmpleado.getInt(10));
    	   }
    	   
    	   datosEmpleado = st.executeQuery("select infoEmpleado.codigo,nombre,apellidos,sexo,edad,telefono1,telefono2,direccion,salarioHora,frecuencia from infoEmpleado inner join Planificador on Planificador.codigo = infoEmpleado.codigo");
@@ -534,14 +555,9 @@ public class DBConnection implements Serializable{
 		   
 		   
 		   while(datosGrupoDeTrabajo.next()) {
-			   //System.out.printf("%s\n", datosGrupoDeTrabajo.getString(2));
-			   //if(datosGrupoDeTrabajo.getString(1).equals((datosProyecto.getString(1)))) {
-				   //System.out.printf("%s %s\n", datosGrupoDeTrabajo.getString(1), datosGrupoDeTrabajo.getString(2));
-				   for (Empleado empleado : Empresa.getInstance().getEmpleados()) {
-					   //System.out.printf("%s\n", empleado.getId());
+			     for (Empleado empleado : Empresa.getInstance().getEmpleados()) {
 					    if (empleado.getId().equals(datosGrupoDeTrabajo.getString(2))) {
 					    	grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
-					        //System.out.printf("%s = %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
 					    }
 					    else {
 					    	//System.out.printf("%s != %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
@@ -629,6 +645,18 @@ public class DBConnection implements Serializable{
 	   }*/
 	   
    }
+
+public void addProyectoActivo(ArrayList<Empleado> grupoTrabajo) throws SQLException {
+	 CallableStatement cs;
+	 
+	for(int i = 0; i < grupoTrabajo.size();i++)
+	{
+		 cs = conn.prepareCall("exec spIncrementarProyectosActivos '"+grupoTrabajo.get(i).getId()+"'");
+		 cs.executeUpdate();
+			 
+	}
+	
+}
     
 	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
 	// TODO Auto-generated method stub
