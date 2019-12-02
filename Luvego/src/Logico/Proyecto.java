@@ -141,13 +141,20 @@ public class Proyecto implements Serializable {
 
 	public float getSumaSalarios() {
 
-		float salaJefe = grupoTrabajo.get(0).getSalarioHora();
+		/*float salaJefe = grupoTrabajo.get(0).getSalarioHora();
 		float salaPlani = grupoTrabajo.get(1).getSalarioHora();
 		float salaP1 = grupoTrabajo.get(2).getSalarioHora();
 		float salaP2 = grupoTrabajo.get(3).getSalarioHora();
-		float salaTrabaAdicional = grupoTrabajo.get(4).getSalarioHora();
+		*/
+		int sumaSalarios = 0;
+		
+		for(int i = 0; i < grupoTrabajo.size();i++)
+		{
+			sumaSalarios += grupoTrabajo.get(i).getSalarioHora();
+		}
+		//float salaTrabaAdicional = grupoTrabajo.get(4).getSalarioHora();
 
-		return (salaJefe + salaPlani + salaP1 + salaP2 + salaTrabaAdicional);
+		return sumaSalarios;//(salaJefe + salaPlani + salaP1 + salaP2/* + salaTrabaAdicional*/);
 	}
 
 	public String getId() {
