@@ -1,5 +1,6 @@
 package Connection;
 
+import java.io.File;
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -29,9 +30,17 @@ import Logico.Planificador;
 import Logico.Programador;
 import Logico.Proyecto;
 import javafx.print.Collation;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 public class DBConnection implements Serializable{
 	
@@ -59,6 +68,30 @@ public class DBConnection implements Serializable{
             connectionToStore = new DBConnection();
         }
         return connectionToStore;
+    }
+    
+    public Connection getConnectionn() {
+    	return conn;
+    }
+    
+    public void generarReporteContratos() throws JRException {
+    	/* JasperReport is the object
+		that holds our compiled jrxml file */
+		JasperReport jasperReport;
+
+
+		/* JasperPrint is the object contains
+		report after result filling process */
+		JasperPrint jasperPrint;
+		
+		HashMap jasperParameter = new HashMap();
+		
+		jasperReport = JasperCompileManager.compileReport
+				(new File("").getAbsolutePath()+"\\src\\Logico\\ReporteContrato2.jrxml");
+		
+		jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, getConnectionn()); 
+		
+		JasperExportManager.exportReportToPdfFile(jasperPrint, new File("").getAbsolutePath()+"\\src\\Logico\\reporteContratos.pdf");
     }
     
     public void agregarCliente(String cedula, String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion) throws SQLException {
@@ -659,7 +692,7 @@ public class DBConnection implements Serializable{
 	   
 	   while(datosProyecto.next()) {
 		   
-		   
+		   System.out.printf("%s\n", datosProyecto.getString(1));
 		   
 		   while(datosGrupoDeTrabajo.next()) {
 			     for (Empleado empleado : Empresa.getInstance().getEmpleados()) {
@@ -718,9 +751,19 @@ public class DBConnection implements Serializable{
 			
 		   }*/
 	   }
+	   
+	   int cantProyectos = 0;
+	   ResultSet rsCantProyectos = sta3.executeQuery("SELECT COUNT(*) FROM [dbo].[Proyecto]");
+	   while(rsCantProyectos.next()) {
+		   cantProyectos = Integer.valueOf(rsCantProyectos.getString(1));
+		   break;
+	   }
+	   
+	   Proyecto.setCont(cantProyectos);
+	   System.out.printf("catproyet = %d", Proyecto.getCont());
    }
    
-   private void ordenarGrupoDeTrabajo(ArrayList<Empleado> grupoDeTrabajo) {
+   private void ordenarGrupoDeTrabajo(ArrayList<Empleado> grupoDeTrabajo) throws NumberFormatException, SQLException {
 	   	   
 	   for(int i = 0; i < grupoDeTrabajo.size(); i++) {
 		   for(int j = i; j < grupoDeTrabajo.size(); j++) {

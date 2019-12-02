@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,12 +22,14 @@ import javax.swing.table.DefaultTableModel;
 
 import com.sun.glass.events.MouseEvent;
 
+import Connection.DBConnection;
 import Logico.Cliente;
 import Logico.ColorTabla;
 import Logico.Contrato;
 import Logico.Empleado;
 import Logico.Empresa;
 import Logico.Proyecto;
+import net.sf.jasperreports.engine.JRException;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -245,6 +248,20 @@ public class ListarContratos extends JDialog {
 				btnCancelarContrato.setBounds(736, 5, 128, 23);
 				buttonPane.add(btnCancelarContrato);
 			}
+			
+			JButton btnGenerarReporte = new JButton("Generar Reporte");
+			btnGenerarReporte.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						DBConnection.getInstance().generarReporteContratos();
+					} catch (ClassNotFoundException | JRException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+			btnGenerarReporte.setBounds(0, 0, 128, 25);
+			buttonPane.add(btnGenerarReporte);
 		}
 		{
 			JPanel panel = new JPanel();
@@ -376,5 +393,4 @@ public class ListarContratos extends JDialog {
 		}
 
 	}
-	
 }
