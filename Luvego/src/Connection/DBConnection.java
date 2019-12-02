@@ -691,8 +691,8 @@ public class DBConnection implements Serializable{
 	   String codContrato = null;
 	   
 	   while(datosProyecto.next()) {
-		   
-		   System.out.printf("%s\n", datosProyecto.getString(1));
+		   System.out.printf("proyecto %s:%s\n", datosProyecto.getString(1), datosProyecto.getString(2));
+		   //System.out.printf("%s\n", datosProyecto.getString(1));
 		   
 		   while(datosGrupoDeTrabajo.next()) {
 			     for (Empleado empleado : Empresa.getInstance().getEmpleados()) {

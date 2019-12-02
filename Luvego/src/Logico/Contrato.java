@@ -1,7 +1,9 @@
 package Logico;
 
 import java.io.Serializable;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Contrato implements Serializable{
 
@@ -94,7 +96,13 @@ public class Contrato implements Serializable{
 	{
 		Date fecha = new Date();
 		
-		return Math.abs(fechaInicio.getDate() - fechaEntrega.getDate());
+		long diff = fechaEntrega.getTime() - fechaInicio.getTime();
+		
+		return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+		
+		//return Days.daysBetween(date1, date2).getDays();
+		
+		//return Math.abs(fechaInicio.getDate() - fechaEntrega.getDate());
 	}
 
 	public void aplazar(Date fecha)
