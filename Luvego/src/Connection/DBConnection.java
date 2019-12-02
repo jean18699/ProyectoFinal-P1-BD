@@ -66,7 +66,9 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     public void agregarDisegnador(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
-        CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+codigo+"',''"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+    	System.out.println("Diseg agregado");
+        //CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+codigo+"',''"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+codigo+"','"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
         cs.executeUpdate();
     }
     public void agregarPlanificador(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora,int frecuencia) throws SQLException {
@@ -79,12 +81,14 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
-    public void agregarProyecto(String nombreProyecto, String estadoProyecto, String lenguaje, String atrasado, String especialidad,
-    		String cedulaCliente, String fechaEntrega, String precioFinal, String estadoContrato,
+    public void agregarProyectoContrato(String idProyecto, String nombreProyecto, String estadoProyecto, String lenguaje, String atrasado, String especialidad,
+    		String cedulaCliente,
+    		String idContrato, String fechaInicio, String fechaEntrega, String precioFinal, String estadoContrato,
     		String codigoJefe, String codigoPlanificador, String codigoProgramadorUno, String codigoProgramadorDos, String codigoAdicional) throws SQLException {
     	
-    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProyectoContrato]('"+nombreProyecto+"','"+estadoProyecto+"','"+lenguaje+"','"+atrasado+"','"+especialidad+"','"+
-    																						cedulaCliente+"','"+fechaEntrega+"','"+precioFinal+"','"+estadoContrato+"','"+
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarProyectoContrato]('"+idProyecto+"','"+nombreProyecto+"','"+estadoProyecto+"','"+lenguaje+"','"+atrasado+"','"+especialidad+"','"+
+    																						cedulaCliente+"','"+
+																							idContrato+"','"+fechaInicio+"','"+fechaEntrega+"','"+precioFinal+"','"+estadoContrato+"','"+
 																							codigoJefe+"','"+codigoPlanificador+"','"+codigoProgramadorUno+"','"+codigoProgramadorDos+"','"+codigoAdicional+"')}");
     	cs.executeUpdate();
     }
@@ -436,7 +440,7 @@ public class DBConnection implements Serializable{
    				   datosEmpleado.getString(3),datosEmpleado.getString(4),datosEmpleado.getInt(5),datosEmpleado.getString(6),datosEmpleado.getString(7),
    				datosEmpleado.getString(8),datosEmpleado.getFloat(9),especialidades);
    		   
-   		   System.out.printf("arr: %s\n", datosEmpleado.getString(1));
+   		   //System.out.printf("arr: %s\n", datosEmpleado.getString(1));
    		   empleado.setId(datosEmpleado.getString(1).substring(4));
    		   Empresa.getInstance().nuevoEmpleado(empleado);
    	   }
@@ -500,17 +504,12 @@ public class DBConnection implements Serializable{
 	   ResultSet rsGrupoDeTrabajo = sta.executeQuery("SELECT idProyecto, codEmpleado FROM Proyecto_Empleado");
 	   CachedRowSet datosGrupoDeTrabajo = new CachedRowSetImpl();
 	   datosGrupoDeTrabajo.populate(rsGrupoDeTrabajo);
-	   
-	   //System.out.printf("un sueldo = %f\n", Empresa.getInstance().getEmpleadoById("JFE-0000002").getSalarioHora());
+
 	   
 	   /*for(int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
-		   System.out.printf("%s = JFE-0000005: %b\n", Empresa.getInstance().getEmpleados().get(i).getId(), Empresa.getInstance().getEmpleados().get(i).getId().equals("JFE-0000005"));
-	   }*/
-	   
-	   for(int i = 0; i < Empresa.getInstance().getEmpleados().size(); i++) {
 		   System.out.printf("%s\n", Empresa.getInstance().getEmpleados().get(i).getId());
 	   }
-	   System.out.println();
+	   System.out.println();*/
 	   
 	   
 	   ArrayList<Empleado> grupoTrabajo = new ArrayList<>();
@@ -529,25 +528,25 @@ public class DBConnection implements Serializable{
 					   //System.out.printf("%s\n", empleado.getId());
 					    if (empleado.getId().equals(datosGrupoDeTrabajo.getString(2))) {
 					    	grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
-					        System.out.printf("%s = %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
+					        //System.out.printf("%s = %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
 					    }
 					    else {
-					    	System.out.printf("%s != %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
+					    	//System.out.printf("%s != %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
 					    }
 					}
 		   }
 		   
-		   for(int i = 0; i < grupoTrabajo.size(); i++) {
+		   /*for(int i = 0; i < grupoTrabajo.size(); i++) {
 			   System.out.printf("%s ", grupoTrabajo.get(i).getCargo());
-		   }
+		   }*/
 		   
 		   ordenarGrupoDeTrabajo(grupoTrabajo);
 		   
-		   System.out.println();
+		   /*System.out.println();
 		   
 		   for(int i = 0; i < grupoTrabajo.size(); i++) {
 			   System.out.printf("%s ", grupoTrabajo.get(i).getCargo());
-		   }
+		   }*/
 		   
 		   
 		   while (datosContrato.next()) {
@@ -556,8 +555,6 @@ public class DBConnection implements Serializable{
 				   
 				   codCliente = datosContrato.getString(3);
 				   codContrato = datosContrato.getString(1);
-				   
-				   System.out.printf("Contrato");
 				   
 				   //System.out.printf("len GT = %d\n", grupoTrabajo.size());
 				   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));

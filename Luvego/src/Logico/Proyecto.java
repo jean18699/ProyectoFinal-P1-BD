@@ -161,6 +161,17 @@ public class Proyecto implements Serializable {
 	public boolean isAtrasado() {
 		return atrasado;
 	}
+	
+	public String getAtrasadoBIT() {
+		String isAtrasado = "0";
+		
+		if(isAtrasado()) {
+			isAtrasado = "1";
+		}
+		
+		return isAtrasado;
+				
+	}
 
 	public void setAtrasado(boolean atrasado) {
 		this.atrasado = atrasado;

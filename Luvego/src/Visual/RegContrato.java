@@ -1,9 +1,11 @@
 package Visual;
 
 import java.awt.BorderLayout;
+
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +20,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Connection.DBConnection;
 import Logico.Cliente;
 import Logico.Contrato;
 import Logico.Empleado;
@@ -45,6 +48,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class RegContrato extends JDialog {
 	private JTextField txtIdProyecto;
@@ -291,10 +295,11 @@ public class RegContrato extends JDialog {
 						}
 						{
 							JButton btnNewButton_2 = new JButton("Informacion");
+							btnNewButton_2.setEnabled(false);
 							btnNewButton_2.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 								
-									InfoCliente info = new InfoCliente(proyecto.getContrato().getCliente());
+									InfoCliente info = new InfoCliente(/*proyecto.getContrato().getCliente()*/Empresa.getInstance().getClienteById(txtIdCliente.getText()));
 									info.setLocationRelativeTo(null);
 									info.setModal(true);
 									info.setVisible(true);
@@ -370,7 +375,14 @@ public class RegContrato extends JDialog {
 						
 							if(proyecto.isRealizado())
 							{
+								DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 								Empresa.getInstance().agregarProyecto(proyecto);
+								try {
+									DBConnection.getInstance().agregarProyectoContrato(proyecto.getId(), proyecto.getNombre(), proyecto.getEstado(), proyecto.getLenguaje(), (String) proyecto.getAtrasadoBIT(), proyecto.getClasificacion(), cliente.getCedula(), contrato.getId(), df.format(contrato.getFechaInicio()), df.format(contrato.getFechaEntrega()), String.valueOf(contrato.getPrecioFinal()), String.valueOf(contrato.getEstado()), proyecto.getGrupoTrabajo().get(0).getId(), proyecto.getGrupoTrabajo().get(1).getId(), proyecto.getGrupoTrabajo().get(2).getId(), proyecto.getGrupoTrabajo().get(3).getId(), proyecto.getGrupoTrabajo().get(4).getId());
+								} catch (ClassNotFoundException | SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 								dispose();
 							}
 							
