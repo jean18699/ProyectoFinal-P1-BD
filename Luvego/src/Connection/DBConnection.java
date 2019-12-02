@@ -111,6 +111,12 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
+    public void finalizarProyecto(String idProyecto) throws SQLException
+    {
+        CallableStatement cs = conn.prepareCall("{call [dbo].[spFinalizarProyecto]('"+idProyecto+"')}");
+        cs.executeUpdate();
+    }
+    
   ////////////MOSTRAR ENTIDADES\\\\\\\\\\\\\\\\
     public DefaultTableModel mostrarEmpleados() throws SQLException{
 
@@ -502,7 +508,7 @@ public class DBConnection implements Serializable{
 	   CachedRowSet datosProyecto = new CachedRowSetImpl();
 	   datosProyecto.populate(rsProyecto);
 	   
-	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final estado FROM Contrato");
+	   ResultSet rsContrato = sta.executeQuery("SELECT idContrato, idProyecto, cedCliente, fecha_inicio, fecha_entrega, precio_final, estado FROM Contrato");
 	   CachedRowSet datosContrato = new CachedRowSetImpl();
 	   datosContrato.populate(rsContrato);
 	   

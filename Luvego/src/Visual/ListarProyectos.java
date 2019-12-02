@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.sun.glass.events.MouseEvent;
 
+import Connection.DBConnection;
 import Logico.Cliente;
 import Logico.ColorTabla;
 import Logico.Empleado;
@@ -381,7 +383,12 @@ public class ListarProyectos extends JDialog {
 					Proyecto proyecto = Empresa.getInstance().getProyectoById(select);
 					Empresa.getInstance().setUltimoProyecto(proyecto);
 					Empresa.getInstance().finalizarProyecto(select);
-					
+					try {
+						DBConnection.getInstance().finalizarProyecto(proyecto.getId());
+					} catch (ClassNotFoundException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					cargarProyectos();
 				}
 			});
