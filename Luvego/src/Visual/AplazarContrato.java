@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import Connection.DBConnection;
 import Logico.Contrato;
 import Logico.Proyecto;
 
@@ -17,6 +18,8 @@ import java.awt.Window.Type;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -186,7 +189,14 @@ public class AplazarContrato extends JDialog {
 							JOptionPane.showMessageDialog(null, "Digite una fecha valida", "Error",
 									JOptionPane.ERROR_MESSAGE);
 						} else {
+							DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 							contrato.aplazar((Date) spnFecha.getValue());
+							try {
+								DBConnection.getInstance().aplazarContrato(contrato.getId(), df.format(spnFecha.getValue()));
+							} catch (ClassNotFoundException | SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							dispose();
 						}
 					}

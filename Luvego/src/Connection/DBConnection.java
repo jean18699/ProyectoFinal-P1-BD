@@ -99,6 +99,11 @@ public class DBConnection implements Serializable{
         cs.executeUpdate();
     }
     
+    public void aplazarContrato(String idContrato, String nuevaFecha) throws SQLException {
+    	CallableStatement cs = conn.prepareCall("{call [dbo].[spAplazarContrato]('"+idContrato+"','"+nuevaFecha+"')}");
+    	cs.executeUpdate();
+    }
+    
     
     public void borrarEmpleado(String codigo) throws SQLException
     {
