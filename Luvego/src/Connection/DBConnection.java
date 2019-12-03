@@ -36,6 +36,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -58,9 +59,6 @@ public class DBConnection implements Serializable{
         sta = conn.createStatement();
         sta2 = conn.createStatement();
         sta3 = conn.createStatement();
-        
-        //setTotales(); //poniendo en las ventanas todos los totales de los objetos registrados
-
     }
     
     public static DBConnection getInstance() throws SQLException, ClassNotFoundException {
@@ -75,13 +73,9 @@ public class DBConnection implements Serializable{
     }
     
     public void generarReporteContratos() throws JRException {
-    	/* JasperReport is the object
-		that holds our compiled jrxml file */
+    	
 		JasperReport jasperReport;
-
-
-		/* JasperPrint is the object contains
-		report after result filling process */
+		
 		JasperPrint jasperPrint;
 		
 		HashMap jasperParameter = new HashMap();
@@ -92,6 +86,7 @@ public class DBConnection implements Serializable{
 		jasperPrint = JasperFillManager.fillReport(jasperReport,jasperParameter, getConnectionn()); 
 		
 		JasperExportManager.exportReportToPdfFile(jasperPrint, new File("").getAbsolutePath()+"\\src\\Logico\\reporteContratos.pdf");
+		JasperViewer.viewReport(new File("").getAbsolutePath()+"\\src\\Logico\\reporteContrato2.jrprint", false);
     }
     
     public void agregarCliente(String cedula, String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion) throws SQLException {
@@ -105,7 +100,6 @@ public class DBConnection implements Serializable{
     }
     public void agregarDisegnador(String codigo,String cedula,String nombre, String apellidos, String sexo, String telefono1, String telefono2, String correo, String direccion,int edad, float salarioHora) throws SQLException {
     	System.out.println("Diseg agregado");
-        //CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+codigo+"',''"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
     	CallableStatement cs = conn.prepareCall("{call [dbo].[spAgregarDisegnador]('"+codigo+"','"+cedula+"','"+nombre+"','"+apellidos+"','"+sexo+"','"+direccion+"','"+edad+"','"+correo+"','"+telefono1+"','"+telefono2+"','"+salarioHora+"')}");
         cs.executeUpdate();
     }
@@ -130,17 +124,6 @@ public class DBConnection implements Serializable{
 																							idContrato+"','"+fechaInicio+"','"+fechaEntrega+"','"+precioFinal+"','"+estadoContrato+"','"+
 																							codigoJefe+"','"+codigoPlanificador+"','"+codigoProgramadorUno+"','"+codigoProgramadorDos+"','"+codigoAdicional+"')}");
     	cs.executeUpdate();
-    	
-    	/*CallableStatement csJefe = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoJefe+"')}");
-    	csJefe.executeUpdate();
-    	CallableStatement csProg = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoProgramadorUno+"')}");
-    	csJefe.executeUpdate();
-    	CallableStatement csProg2 = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoProgramadorDos+"')}");;
-    	csJefe.executeUpdate();
-    	CallableStatement csPlan = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoPlanificador+"')}");
-    	csJefe.executeUpdate();
-    	CallableStatement csAdicional = conn.prepareCall("call [dbo].[spIncrementTotalProyectos]('"+codigoAdicional+"')}");
-    	csJefe.executeUpdate();*/
     }
 
     public void agregarEspecialidadProgramador(String codigo,String especialidad) throws SQLException
@@ -288,13 +271,6 @@ public class DBConnection implements Serializable{
     {
     	CallableStatement cs = conn.prepareCall("{call [dbo].[spGuardarVenta]('"+idProyecto+"','"+cedulaCliente+"','"+nombreCliente+"','"+nombreProyecto+"','"+fechaInicio+"','"+fechaEntrega+"','"+perdidasTotales+"','"+ganancias+"')}");
         cs.executeUpdate();
-        
-    
-    	/*Statement s = conn.createStatement();
-        s.executeUpdate("insert into Venta(idProyecto,idCliente,nombreCliente,nombreProyecto,fecha_inicio,fecha_entrega,perdidasTotales,ganancias)" 
-        		+"values(idProyecto,cedulaCliente,nombreCliente,nombreProyecto,fechaInicio,fechaEntrega,perdidasTotales,ganancias)");
-        */
-    	//new SimpleDateFormat("yyyy-MM-dd").parse(datosContrato.getString(5)
     }
     
     public DefaultTableModel mostrarProgramador() throws SQLException{
@@ -414,33 +390,6 @@ public class DBConnection implements Serializable{
          return modelo;       
     }
     
-    public DefaultTableModel mostrarProyectosVentanaPrincipal() throws SQLException
-    {
-    	 DefaultTableModel modelo= new DefaultTableModel();
-         Statement s = conn.createStatement();
-         ResultSet rs = s.executeQuery("select idProyecto,nombre,Estado from Proyecto");
-         
-         modelo.addColumn("ID");
-         modelo.addColumn("Nombre");
-         modelo.addColumn("Estado");
-         
-      // Bucle para cada resultado en la consulta
-         while (rs.next())
-         {
-            // Se crea un array que será una de las filas de la tabla.
-            Object [] fila = new Object[3]; // Hay tres columnas en la tabla
-
-            // Se rellena cada posición del array con una de las columnas de la tabla en base de datos.
-            for (int i=0;i<3;i++)
-               fila[i] = rs.getObject(i+1); // El primer indice en rs es el 1, no el cero, por eso se suma 1.
-
-            // Se añade al modelo la fila completa.
-            modelo.addRow(fila);
-         }
-         
-         return modelo;       
-    }
-    
     public void fijarEstadoProyecto(String idProyecto, String estado) throws SQLException
     {
         CallableStatement cs = conn.prepareCall("{call [dbo].[spFijarEstadoProyecto]('"+idProyecto+"','"+estado+"')}");
@@ -452,54 +401,6 @@ public class DBConnection implements Serializable{
         CallableStatement cs = conn.prepareCall("{call [dbo].[spFijarEvaluacionAnualEmpleado]('"+idEmpleado+"','"+evaluacion+"')}");
         cs.executeUpdate();
     }
-    
-    
-  /*  public void getInfoEmpleadoByCodigo(String codigo)
-    {
-    	  CallableStatement cs = conn.prepareCall("exec spG");
-    	  ResultSet rs = cs.executeQuery("exec spInfoEmpleadoByCodigo")
-          
-    }
-    
-    
-    
-    */
-    ////////RETORNO DE CANTIDADES\\\\\\\\\\\\
-    /*public int setTotales() throws SQLException
-    {
-    	
-    	Statement st = conn.createStatement();
-    	ResultSet rs = st.executeQuery("select count(*) as total from Empleado");
-        while(rs.next())
-        {
-        	Empresa.getInstance().setTotalEmpleados(rs.getInt("total"));	
-        }
-        
-        rs = st.executeQuery("select count(*) as total from Empleado where codigo like('PRG%')");
-        while(rs.next())
-        {
-        	Empresa.getInstance().setTotalProgramadores(rs.getInt("total"));	
-        }
-        
-        rs = st.executeQuery("select count(*) as total from Empleado where codigo like('PLN%')");
-        while(rs.next())
-        {
-        	Empresa.getInstance().setTotalPlanificadores(rs.getInt("total"));	
-        }
-        
-        rs = st.executeQuery("select count(*) as total from Empleado where codigo like('JFE%')");
-        while(rs.next())
-        {
-        	Empresa.getInstance().setTotalJefes(rs.getInt("total"));	
-        }
-        
-        rs = st.executeQuery("select count(*) as total from Empleado where codigo like('DSG%')");
-        while(rs.next())
-        {
-        	Empresa.getInstance().setTotalDisegnadores(rs.getInt("total"));	
-        }
-		return 0;
-    }*/
     
    public void cargarDatos() throws SQLException, ParseException
    {
@@ -699,24 +600,10 @@ public class DBConnection implements Serializable{
 					    if (empleado.getId().equals(datosGrupoDeTrabajo.getString(2))) {
 					    	grupoTrabajo.add(Empresa.getInstance().getEmpleadoById(datosGrupoDeTrabajo.getString(2)));
 					    }
-					    else {
-					    	//System.out.printf("%s != %s\n", datosGrupoDeTrabajo.getString(2), empleado.getId());
-					    }
 					}
 		   }
 		   
-		   /*for(int i = 0; i < grupoTrabajo.size(); i++) {
-			   System.out.printf("%s ", grupoTrabajo.get(i).getCargo());
-		   }*/
-		   
 		   ordenarGrupoDeTrabajo(grupoTrabajo);
-		   
-		   /*System.out.println();
-		   
-		   for(int i = 0; i < grupoTrabajo.size(); i++) {
-			   System.out.printf("%s ", grupoTrabajo.get(i).getCargo());
-		   }*/
-		   
 		   
 		   while (datosContrato.next()) {
 			   
@@ -725,12 +612,9 @@ public class DBConnection implements Serializable{
 				   codCliente = datosContrato.getString(3);
 				   codContrato = datosContrato.getString(1);
 				   
-				   //System.out.printf("len GT = %d\n", grupoTrabajo.size());
 				   Proyecto proyecto = new Proyecto(datosProyecto.getString(2), grupoTrabajo, datosProyecto.getString(3), datosProyecto.getString(5));
 				   proyecto.setId(datosProyecto.getString(1));
 				   proyecto.setCont(Integer.parseInt(proyecto.getId()));
-				   //System.out.printf("un sueldo %d\n", proyecto.getGrupoTrabajo().get(0).getSalarioHora());
-				   //System.out.printf("un sueldo = %f", proyecto.getGrupoTrabajo().get(0).getCedula());
 				   
 				   Contrato contrato = new Contrato(proyecto, new SimpleDateFormat("yyyy-MM-dd").parse(datosContrato.getString(5)));
 				   contrato.setId(datosContrato.getString(1));
@@ -738,18 +622,10 @@ public class DBConnection implements Serializable{
 				   proyecto.setContrato(contrato);
 				   Empresa.getInstance().agregarProyecto(proyecto);
 				   
-				   break; // ????????????????????/
+				   break;
 			   }
 			
 		   }
-		   
-		   /*while (datosCliente.next()) {
-				
-			   if(datosCliente.getString(1).equals(codCliente)) {
-				   
-			   }
-			
-		   }*/
 	   }
 	   
 	   int cantProyectos = 0;
@@ -760,7 +636,6 @@ public class DBConnection implements Serializable{
 	   }
 	   
 	   Proyecto.setCont(cantProyectos);
-	   System.out.printf("catproyet = %d", Proyecto.getCont());
    }
    
    private void ordenarGrupoDeTrabajo(ArrayList<Empleado> grupoDeTrabajo) throws NumberFormatException, SQLException {
@@ -789,44 +664,12 @@ public class DBConnection implements Serializable{
 				   }
 			   }
 		   }
-	   }
-	   
-	   /*for(int i = 0; i < grupoDeTrabajo.size(); i++) {
-		   System.out.printf("%s ", grupoDeTrabajo.get(i).getCargo());
-	   }*/
-	   
+	   }	   
    }
 
-public void ProyectosActivos(String codigo) throws SQLException {
-	
-	CallableStatement cs = conn.prepareCall("{call [dbo].[spProyectoActivos]('"+codigo+"')}");
-    cs.executeUpdate();
-	 
-	/*for(int i = 0; i < grupoTrabajo.size();i++)
-	{
-		 cs = conn.prepareCall("exec spIncrementarProyectosActivos '"+grupoTrabajo.get(i).getId()+"'");
-		 cs.executeUpdate();
-			 
-	}*/
-}
-
-
-
-
-	/*public static void main(String[] args) throws ClassNotFoundException, SQLException {
-	// TODO Auto-generated method stub
-	
-	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-    //Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=GroceryStore;instance=MSSQLSERVER;integratedSecurity=true");
-    Connection conn = DriverManager.getConnection("jdbc:sqlserver://ojosdelacara.database.windows.net:1433;database=Luvego;user=JeanGeorge@ojosdelacara;password=Luvego12*45JeanKGeorge;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;");
-
-    Statement sta = conn.createStatement();
-	String Sql = "SELECT * FROM Persona";
-	ResultSet rs = sta.executeQuery(Sql);
-	while (rs.next()) {
-		System.out.println(rs.getString(1) + " " + rs.getString(2));
-	}
+	public void ProyectosActivos(String codigo) throws SQLException {
 		
-}*/
+		CallableStatement cs = conn.prepareCall("{call [dbo].[spProyectoActivos]('"+codigo+"')}");
+	    cs.executeUpdate();
+	}
 }
